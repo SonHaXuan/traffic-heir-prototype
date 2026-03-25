@@ -33,8 +33,14 @@ This prototype does **not** attempt full city-scale real-time control yet. Inste
 traffic-heir-prototype/
 ├── pyproject.toml
 ├── README.md
+├── configs/
+│   └── sumo/
+│       ├── two_intersections.yaml
+│       ├── corridor.yaml
+│       └── grid_3x3.yaml
 ├── src/traffic_heir/
 │   ├── __init__.py
+│   ├── baselines.py
 │   ├── config.py
 │   ├── synthetic.py
 │   ├── labels.py
@@ -42,10 +48,13 @@ traffic-heir-prototype/
 │   ├── models.py
 │   ├── train.py
 │   ├── evaluate.py
-│   └── heir_export.py
+│   ├── heir_export.py
+│   └── sumo_scaffold.py
 └── scripts/
     ├── run_prototype.py
-    └── export_heir_stub.py
+    ├── export_heir_stub.py
+    ├── smoke_test.py
+    └── sumo_scaffold.py
 ```
 
 ## Quick start
@@ -53,6 +62,8 @@ traffic-heir-prototype/
 ```bash
 python3 scripts/run_prototype.py
 python3 scripts/export_heir_stub.py
+python3 scripts/smoke_test.py
+python3 scripts/sumo_scaffold.py
 ```
 
 ## Prototype outputs
@@ -65,10 +76,23 @@ The prototype prints:
 - local-vs-cooperative comparison
 - a generated HEIR stub file for later encrypted inference work
 
+## Current baseline coverage
+
+Implemented in the current prototype:
+- fixed-time baseline
+- local heuristic baseline
+- local max-pressure baseline
+- local plaintext learned model
+- cooperative plaintext learned model
+- cooperative HE-friendly learned model
+- ablation without interaction features
+- ablation without neighbor-summary features
+- SUMO directory/config scaffold for the next stage
+
 ## Planned next steps
 
 1. Replace synthetic generator with SUMO-derived state extraction
-2. Add topology configs: two intersections, corridor, 3x3 grid
-3. Add robustness evaluation with missing/noisy sensors
-4. Connect exported HE-friendly model to actual HEIR compilation flow
-5. Add latency and communication overhead reporting
+2. Add robustness evaluation with missing/noisy sensors
+3. Connect exported HE-friendly model to actual HEIR compilation flow
+4. Add latency and communication overhead reporting
+5. Expand from binary phase choice to richer signal decision support actions

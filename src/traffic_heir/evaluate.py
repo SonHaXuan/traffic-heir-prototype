@@ -3,7 +3,12 @@ from __future__ import annotations
 import random
 from typing import Dict, List, Sequence, Tuple
 
-from .fusion import cooperative_features, local_features
+from .fusion import (
+    cooperative_features,
+    cooperative_no_interaction_features,
+    cooperative_no_neighbor_features,
+    local_features,
+)
 from .labels import decision_label, local_heuristic_label
 
 
@@ -20,7 +25,14 @@ def build_xy(samples: Sequence[Dict[str, object]], mode: str) -> Tuple[List[List
     xs: List[List[float]] = []
     ys: List[int] = []
     for sample in samples:
-        xs.append(local_features(sample) if mode == "local" else cooperative_features(sample))
+        if mode == "local":
+            xs.append(local_features(sample))
+        elif mode == "coop_no_interaction":
+            xs.append(cooperative_no_interaction_features(sample))
+        elif mode == "coop_no_neighbor":
+            xs.append(cooperative_no_neighbor_features(sample))
+        else:
+            xs.append(cooperative_features(sample))
         ys.append(decision_label(sample))
     return xs, ys
 

@@ -1,0 +1,5 @@
+topology: two_intersections
+intersections: 2
+lanes_per_direction: 1
+signal_phases: [NS, EW]
+notes: Minimal SUMO topology scaffold for future data extraction.

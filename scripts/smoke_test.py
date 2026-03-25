@@ -17,9 +17,13 @@ def main() -> None:
     local = results["local_result"]
     coop = results["coop_result"]
 
+    assert 0.0 <= results["fixed_time_val_accuracy"] <= 1.0
     assert 0.0 <= results["heuristic_val_accuracy"] <= 1.0
+    assert 0.0 <= results["max_pressure_val_accuracy"] <= 1.0
     assert 0.0 <= local.val_accuracy <= 1.0
     assert 0.0 <= coop.val_accuracy <= 1.0
+    assert 0.0 <= results["ablation_no_interaction"].val_accuracy <= 1.0
+    assert 0.0 <= results["ablation_no_neighbor"].val_accuracy <= 1.0
 
     out = ROOT / "generated" / "smoke_heir_stub.py"
     export_heir_stub(coop, out)

@@ -19,3 +19,19 @@ def cooperative_features(sample: Dict[str, object]) -> List[float]:
     elapsed = [float(sample["elapsed"]) / 60.0]
     phase = [float(sample["phase"])]
     return local + neighbor_mean + interaction + elapsed + phase
+
+
+def cooperative_no_interaction_features(sample: Dict[str, object]) -> List[float]:
+    local = _scale(list(sample["local"]))  # type: ignore[arg-type]
+    neighbor_mean = _scale(list(sample["neighbor_mean"]))  # type: ignore[arg-type]
+    elapsed = [float(sample["elapsed"]) / 60.0]
+    phase = [float(sample["phase"])]
+    return local + neighbor_mean + elapsed + phase
+
+
+def cooperative_no_neighbor_features(sample: Dict[str, object]) -> List[float]:
+    local = _scale(list(sample["local"]))  # type: ignore[arg-type]
+    interaction = _scale(list(sample["interaction"]), factor=10.0)  # type: ignore[arg-type]
+    elapsed = [float(sample["elapsed"]) / 60.0]
+    phase = [float(sample["phase"])]
+    return local + interaction + elapsed + phase
