@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import List, Sequence
 
 from .fusion import cooperative_features, local_features
-from .models import TrainResult, train_two_layer_network, predict_batch
+from .models import TrainResult, forward_logits_batch, train_two_layer_network
 from .types import TrafficSample
 
 
@@ -66,10 +66,10 @@ def predict_one_vs_rest(
     *,
     he_friendly: bool,
 ) -> List[int]:
-    all_binary = [predict_batch(xs, m.weights1, m.bias1, m.weights2, m.bias2, he_friendly) for m in models]
+    all_logits = [forward_logits_batch(xs, m.weights1, m.bias1, m.weights2, m.bias2, he_friendly) for m in models]
     outputs: List[int] = []
     for row_idx in range(len(xs)):
-        scores = [all_binary[m_idx][row_idx] for m_idx in range(len(models))]
+        scores = [all_logits[m_idx][row_idx] for m_idx in range(len(models))]
         best_idx = max(range(len(scores)), key=lambda i: scores[i])
         outputs.append(classes[best_idx])
     return outputs

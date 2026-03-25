@@ -40,19 +40,35 @@ traffic-heir-prototype/
 │       └── grid_3x3.yaml
 ├── src/traffic_heir/
 │   ├── __init__.py
+│   ├── action_space.py
 │   ├── baselines.py
 │   ├── config.py
+│   ├── config_io.py
 │   ├── synthetic.py
 │   ├── labels.py
 │   ├── fusion.py
 │   ├── models.py
+│   ├── multiclass.py
 │   ├── train.py
 │   ├── evaluate.py
 │   ├── heir_export.py
-│   └── sumo_scaffold.py
+│   ├── heir_consistency.py
+│   ├── robustness.py
+│   ├── sumo_data.py
+│   ├── sumo_experiment.py
+│   ├── sumo_scaffold.py
+│   └── types.py
 └── scripts/
     ├── run_prototype.py
+    ├── run_with_config.py
+    ├── run_sumo_experiment.py
+    ├── run_action4_experiment.py
+    ├── run_sumo_experiment_large_sample.sh
+    ├── expand_sample_sumo.py
     ├── export_heir_stub.py
+    ├── check_export_consistency.py
+    ├── prepare_sumo_csv.py
+    ├── action_space_demo.py
     ├── smoke_test.py
     └── sumo_scaffold.py
 ```
@@ -68,6 +84,7 @@ python3 scripts/smoke_test.py
 python3 scripts/sumo_scaffold.py
 python3 scripts/prepare_sumo_csv.py data/sumo/raw/sample_states.csv configs/sumo/sample_adjacency.json
 python3 scripts/run_sumo_experiment.py data/sumo/raw/sample_states.csv configs/sumo/sample_adjacency.json
+sh scripts/run_sumo_experiment_large_sample.sh
 python3 scripts/action_space_demo.py
 python3 scripts/run_action4_experiment.py
 ```
@@ -97,7 +114,10 @@ Implemented in the current prototype:
 - initial SUMO CSV parser and cooperative-sample builder
 - adjacency-aware SUMO sample construction
 - HEIR export shape/consistency checks
-- 4-action decision-support scaffold
+- config-driven experiment runner
+- SUMO end-to-end binary experiment runner
+- expanded SUMO sample generator for non-trivial pipeline checks
+- 4-action decision-support scaffold and multi-class prototype runner
 
 ## Planned next steps
 
