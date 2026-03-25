@@ -23,33 +23,37 @@ def cooperative_features(sample: TrafficSample) -> List[float]:
     neighbor_mean = _scale(list(sample["neighbor_mean"]))
     directional = _scale(list(sample.get("neighbor_directional", [])))
     interaction = _scale(list(sample["interaction"]), factor=10.0)
+    temporal = _scale(list(sample.get("temporal", [])), factor=20.0)
     elapsed = [float(sample["elapsed"]) / 60.0]
     phase = [float(sample["phase"])]
-    return local + neighbor_mean + directional + interaction + elapsed + phase
+    return local + neighbor_mean + directional + interaction + temporal + elapsed + phase
 
 
 def cooperative_no_interaction_features(sample: TrafficSample) -> List[float]:
     local = _scale(list(sample["local"]))
     neighbor_mean = _scale(list(sample["neighbor_mean"]))
     directional = _scale(list(sample.get("neighbor_directional", [])))
+    temporal = _scale(list(sample.get("temporal", [])), factor=20.0)
     elapsed = [float(sample["elapsed"]) / 60.0]
     phase = [float(sample["phase"])]
-    return local + neighbor_mean + directional + elapsed + phase
+    return local + neighbor_mean + directional + temporal + elapsed + phase
 
 
 def cooperative_no_neighbor_features(sample: TrafficSample) -> List[float]:
     local_raw = list(sample["local"])
     local = _scale(local_raw)
     self_interaction = _scale(_local_self_interaction(local_raw), factor=10.0)
+    temporal = _scale(list(sample.get("temporal", [])), factor=20.0)
     elapsed = [float(sample["elapsed"]) / 60.0]
     phase = [float(sample["phase"])]
-    return local + self_interaction + elapsed + phase
+    return local + self_interaction + temporal + elapsed + phase
 
 
 def cooperative_no_direction_features(sample: TrafficSample) -> List[float]:
     local = _scale(list(sample["local"]))
     neighbor_mean = _scale(list(sample["neighbor_mean"]))
     interaction = _scale(list(sample["interaction"]), factor=10.0)
+    temporal = _scale(list(sample.get("temporal", [])), factor=20.0)
     elapsed = [float(sample["elapsed"]) / 60.0]
     phase = [float(sample["phase"])]
-    return local + neighbor_mean + interaction + elapsed + phase
+    return local + neighbor_mean + interaction + temporal + elapsed + phase

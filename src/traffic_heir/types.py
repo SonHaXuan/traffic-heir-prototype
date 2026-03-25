@@ -11,6 +11,7 @@ class TrafficSample(TypedDict, total=False):
     neighbor_mean: List[float]
     neighbor_directional: List[float]
     interaction: List[float]
+    temporal: List[float]
     phase: float
     elapsed: float
     source: str

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Iterable
 
@@ -12,12 +13,23 @@ def export_heir_stub(result: TrainResult, out_path: str | Path) -> Path:
     def fmt_vector(values: Iterable[float]) -> str:
         return ", ".join(f"{v:.6f}" for v in values)
 
+    metadata = {
+        "weights1": result.weights1,
+        "bias1": result.bias1,
+        "weights2": result.weights2,
+        "bias2": result.bias2,
+        "train_accuracy": result.train_accuracy,
+        "val_accuracy": result.val_accuracy,
+    }
+
     lines = [
         "# Auto-generated HEIR stub for a low-depth cooperative traffic decision model",
-        "# This is a prototype export and should be adapted to the exact HEIR frontend API.",
+        "# The arithmetic below is kept structurally equivalent to manual_forward() for consistency checks.",
         "",
         "from heir import compile",
         "from heir.mlir import Secret, F64",
+        "",
+        f"MODEL_METADATA = {json.dumps(metadata, indent=2)}",
         "",
         "W1 = [",
     ]

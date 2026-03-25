@@ -1,25 +1,48 @@
 {
   "confusion": {
-    "0->0": 13,
-    "0->1": 3,
-    "1->0": 3,
-    "1->1": 5
+    "1->1": 2
   },
+  "coop_confusion": {
+    "1->1": 2
+  },
+  "coop_no_direction_confusion": {
+    "1->1": 2
+  },
+  "coop_no_direction_pred_distribution": {
+    "1": 2
+  },
+  "coop_no_direction_val_accuracy": 1.0,
+  "coop_no_interaction_confusion": {
+    "1->0": 2
+  },
+  "coop_no_interaction_pred_distribution": {
+    "0": 2
+  },
+  "coop_no_interaction_val_accuracy": 0.0,
+  "coop_pred_distribution": {
+    "1": 2
+  },
+  "coop_val_accuracy": 1.0,
   "label_distribution": {
-    "0": 72,
-    "1": 48
+    "0": 2,
+    "1": 4
   },
+  "local_confusion": {
+    "1->1": 2
+  },
+  "local_pred_distribution": {
+    "1": 2
+  },
+  "local_val_accuracy": 1.0,
   "pred_distribution": {
-    "0": 16,
-    "1": 8
+    "1": 2
   },
-  "rows": 120,
-  "samples": 120,
-  "train": 96,
-  "val": 24,
-  "val_accuracy": 0.75,
+  "rows": 6,
+  "samples": 6,
+  "train": 4,
+  "val": 2,
+  "val_accuracy": 1.0,
   "val_distribution": {
-    "0": 16,
-    "1": 8
+    "1": 2
   }
 }

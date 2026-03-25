@@ -10,25 +10,45 @@ sys.path.insert(0, str(SRC))
 from traffic_heir.action_space import decision_label_4
 from traffic_heir.config import PrototypeConfig
 from traffic_heir.fusion import cooperative_features
-from traffic_heir.multiclass import predict_one_vs_rest, train_one_vs_rest
+from traffic_heir.metrics import confusion_counts
+from traffic_heir.multiclass import predict_multiclass, train_multiclass, train_one_vs_rest, predict_one_vs_rest
 from traffic_heir.reporting import write_metrics_report
 from traffic_heir.synthetic import generate_dataset
 from traffic_heir.evaluate import build_splits
 
 
+CLASSES = [0, 1, 2, 3]
+
+
+def macro_f1(y_true: list[int], y_pred: list[int]) -> float:
+    values = []
+    for cls in CLASSES:
+        tp = sum(1 for truth, pred in zip(y_true, y_pred) if truth == cls and pred == cls)
+        fp = sum(1 for truth, pred in zip(y_true, y_pred) if truth != cls and pred == cls)
+        fn = sum(1 for truth, pred in zip(y_true, y_pred) if truth == cls and pred != cls)
+        precision = tp / max(1, tp + fp)
+        recall = tp / max(1, tp + fn)
+        if precision + recall == 0:
+            values.append(0.0)
+        else:
+            values.append(2 * precision * recall / (precision + recall))
+    return sum(values) / len(values)
+
+
 def main() -> None:
-    config = PrototypeConfig(num_samples=300, epochs=80)
+    config = PrototypeConfig(num_samples=720, epochs=140, coop_hidden_dim=14, learning_rate=0.008)
     samples = generate_dataset(config)
     train_samples, val_samples = build_splits(samples, config.train_ratio, seed=config.seed)
     y_train = [decision_label_4(s, config) for s in train_samples]
     y_val = [decision_label_4(s, config) for s in val_samples]
-    result = train_one_vs_rest(
+
+    ovr = train_one_vs_rest(
         train_samples,
         y_train,
         val_samples,
         y_val,
         mode="coop",
-        classes=[0, 1, 2, 3],
+        classes=CLASSES,
         hidden_dim=config.coop_hidden_dim,
         epochs=config.epochs,
         lr=config.learning_rate,
@@ -36,13 +56,39 @@ def main() -> None:
         he_friendly=True,
     )
     x_val = [cooperative_features(s) for s in val_samples]
-    preds = predict_one_vs_rest(result.models, result.classes, x_val, he_friendly=True)
-    confusion = {}
-    for truth, pred in zip(y_val, preds):
-        confusion[f"{truth}->{pred}"] = confusion.get(f"{truth}->{pred}", 0) + 1
+    ovr_preds = predict_one_vs_rest(ovr.models, ovr.classes, x_val, he_friendly=True)
+
+    result = train_multiclass(
+        train_samples,
+        y_train,
+        val_samples,
+        y_val,
+        mode="coop",
+        classes=CLASSES,
+        hidden_dim=config.coop_hidden_dim,
+        epochs=config.epochs,
+        lr=config.learning_rate,
+        seed=config.seed,
+        he_friendly=True,
+        class_weighting=True,
+    )
+    preds = predict_multiclass(result, x_val, he_friendly=True)
     report = ROOT / "reports" / "action4_metrics.json"
-    write_metrics_report({"val_accuracy": result.val_accuracy, "label_distribution": dict(sorted(Counter(y_val).items())), "prediction_distribution": dict(sorted(Counter(preds).items())), "confusion": confusion}, report)
+    payload = {
+        "val_accuracy": result.val_accuracy,
+        "macro_f1": macro_f1(y_val, preds),
+        "label_distribution": dict(sorted(Counter(y_val).items())),
+        "prediction_distribution": dict(sorted(Counter(preds).items())),
+        "confusion": confusion_counts(y_val, preds),
+        "ovr_val_accuracy": ovr.val_accuracy,
+        "ovr_macro_f1": macro_f1(y_val, ovr_preds),
+        "ovr_prediction_distribution": dict(sorted(Counter(ovr_preds).items())),
+    }
+    write_metrics_report(payload, report)
     print("action4 val accuracy:", round(result.val_accuracy, 4))
+    print("action4 macro-F1:", round(payload["macro_f1"], 4))
+    print("ovr val accuracy:", round(ovr.val_accuracy, 4))
+    print("ovr macro-F1:", round(payload["ovr_macro_f1"], 4))
     print("val label distribution:", dict(sorted(Counter(y_val).items())))
     print("prediction distribution:", dict(sorted(Counter(preds).items())))
     print("report:", report)
