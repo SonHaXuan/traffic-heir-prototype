@@ -5,7 +5,9 @@ from typing import Dict
 from .baselines import fixed_time_predict, local_heuristic_predict, max_pressure_predict
 from .config import PrototypeConfig
 from .evaluate import accuracy, build_splits, build_xy
-from .models import TrainResult, train_two_layer_network
+from .labels import decision_label
+from .models import TrainResult, predict_batch, train_two_layer_network
+from .robustness import perturb_samples
 from .synthetic import generate_dataset
 
 
@@ -35,6 +37,12 @@ def _train_mode(
         seed=seed,
         he_friendly=he_friendly,
     )
+
+
+def _evaluate_result(result: TrainResult, samples, *, mode: str, he_friendly: bool) -> float:
+    x_eval, y_eval = build_xy(samples, mode=mode)
+    preds = predict_batch(x_eval, result.weights1, result.bias1, result.weights2, result.bias2, he_friendly)
+    return accuracy(y_eval, preds)
 
 
 def run_experiment(config: PrototypeConfig) -> Dict[str, object]:
@@ -113,6 +121,15 @@ def run_experiment(config: PrototypeConfig) -> Dict[str, object]:
         he_friendly=True,
     )
 
+    robust_val_samples = perturb_samples(val_samples, config, seed=config.seed + 99)
+    robust_labels = [decision_label(sample, config=config) for sample in robust_val_samples]
+    fixed_time_robust = accuracy(robust_labels, fixed_time_predict(robust_val_samples))
+    heuristic_robust = accuracy(robust_labels, local_heuristic_predict(robust_val_samples))
+    max_pressure_robust = accuracy(robust_labels, max_pressure_predict(robust_val_samples))
+    local_robust = _evaluate_result(local_result, robust_val_samples, mode="local", he_friendly=False)
+    coop_plain_robust = _evaluate_result(coop_plaintext_result, robust_val_samples, mode="coop", he_friendly=False)
+    coop_he_robust = _evaluate_result(coop_result, robust_val_samples, mode="coop", he_friendly=True)
+
     return {
         "dataset_size": len(dataset),
         "train_size": len(train_samples),
@@ -125,4 +142,12 @@ def run_experiment(config: PrototypeConfig) -> Dict[str, object]:
         "coop_result": coop_result,
         "ablation_no_interaction": ablation_no_interaction,
         "ablation_no_neighbor": ablation_no_neighbor,
+        "robustness": {
+            "fixed_time": fixed_time_robust,
+            "local_heuristic": heuristic_robust,
+            "max_pressure": max_pressure_robust,
+            "local_model": local_robust,
+            "coop_plaintext": coop_plain_robust,
+            "coop_he_friendly": coop_he_robust,
+        },
     }

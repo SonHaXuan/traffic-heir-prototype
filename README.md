@@ -64,6 +64,7 @@ python3 scripts/run_prototype.py
 python3 scripts/export_heir_stub.py
 python3 scripts/smoke_test.py
 python3 scripts/sumo_scaffold.py
+python3 scripts/prepare_sumo_csv.py path/to/sumo_states.csv
 ```
 
 ## Prototype outputs
@@ -88,6 +89,8 @@ Implemented in the current prototype:
 - ablation without interaction features
 - ablation without neighbor-summary features
 - SUMO directory/config scaffold for the next stage
+- robustness evaluation under noisy and missing neighbor sensing
+- initial SUMO CSV parser and cooperative-sample builder
 
 ## Planned next steps
 

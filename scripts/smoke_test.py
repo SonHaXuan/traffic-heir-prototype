@@ -24,6 +24,8 @@ def main() -> None:
     assert 0.0 <= coop.val_accuracy <= 1.0
     assert 0.0 <= results["ablation_no_interaction"].val_accuracy <= 1.0
     assert 0.0 <= results["ablation_no_neighbor"].val_accuracy <= 1.0
+    for value in results["robustness"].values():
+        assert 0.0 <= value <= 1.0
 
     out = ROOT / "generated" / "smoke_heir_stub.py"
     export_heir_stub(coop, out)

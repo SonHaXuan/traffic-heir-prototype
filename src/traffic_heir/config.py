@@ -12,3 +12,6 @@ class PrototypeConfig:
     coop_hidden_dim: int = 10
     learning_rate: float = 0.01
     epochs: int = 120
+    ambiguity_threshold: float = 6.0
+    robustness_noise_std: float = 0.08
+    robustness_missing_prob: float = 0.15

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Dict, List
 
+from .config import PrototypeConfig
+
 
 # Binary action space for prototype:
 # 0 -> favor north-south phase
@@ -23,7 +25,7 @@ def local_heuristic_label(sample: Dict[str, object]) -> int:
 
 
 
-def decision_label(sample: Dict[str, object]) -> int:
+def decision_label(sample: Dict[str, object], config: PrototypeConfig | None = None) -> int:
     local: List[float] = sample["local"]  # type: ignore[assignment]
     neighbor_mean: List[float] = sample["neighbor_mean"]  # type: ignore[assignment]
     elapsed: float = float(sample["elapsed"])
@@ -37,12 +39,13 @@ def decision_label(sample: Dict[str, object]) -> int:
     neighbor_ns = nq_n + nq_s + 0.3 * (nw_n + nw_s)
     neighbor_ew = nq_e + nq_w + 0.3 * (nw_e + nw_w)
 
+    cfg = config or PrototypeConfig()
     local_margin = ns_pressure - ew_pressure
     neighbor_margin = neighbor_ns - neighbor_ew
 
     # If the local state is ambiguous, neighboring intersections can flip the
     # recommendation to reduce spillback along the corridor.
-    if abs(local_margin) < 6.0:
+    if abs(local_margin) < cfg.ambiguity_threshold:
         decision_value = local_margin - 0.8 * neighbor_margin + 0.04 * elapsed
         return 0 if decision_value >= 0 else 1
 
