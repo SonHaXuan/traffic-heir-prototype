@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import math
 import random
-from typing import Dict, List
+from typing import List
 
 from .config import PrototypeConfig
+from .types import TrafficSample
 
 
-def _intersection_state(rng: random.Random, idx: int, corridor_bias: float, cross_bias: float) -> Dict[str, float]:
+def _intersection_state(rng: random.Random, idx: int, corridor_bias: float, cross_bias: float) -> dict[str, float]:
     base = 0.6 + 0.15 * math.sin(idx)
     q_n = rng.uniform(4, 20) * (base + corridor_bias)
     q_s = rng.uniform(4, 20) * (base + corridor_bias)
@@ -33,7 +34,7 @@ def _intersection_state(rng: random.Random, idx: int, corridor_bias: float, cros
     }
 
 
-def _as_vector(state: Dict[str, float]) -> List[float]:
+def _as_vector(state: dict[str, float]) -> List[float]:
     return [
         state["q_n"],
         state["q_s"],
@@ -46,9 +47,9 @@ def _as_vector(state: Dict[str, float]) -> List[float]:
     ]
 
 
-def generate_dataset(config: PrototypeConfig) -> List[Dict[str, object]]:
+def generate_dataset(config: PrototypeConfig) -> List[TrafficSample]:
     rng = random.Random(config.seed)
-    dataset: List[Dict[str, object]] = []
+    dataset: List[TrafficSample] = []
 
     for _ in range(config.num_samples):
         corridor_bias = rng.uniform(-0.18, 0.22)

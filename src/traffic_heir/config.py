@@ -13,5 +13,11 @@ class PrototypeConfig:
     learning_rate: float = 0.01
     epochs: int = 120
     ambiguity_threshold: float = 6.0
+    neighbor_margin_weight: float = 0.8
+    elapsed_weight: float = 0.04
+    neighbor_ns_bonus: float = 0.10
+    neighbor_ew_bonus: float = 0.10
     robustness_noise_std: float = 0.08
     robustness_missing_prob: float = 0.15
+    robustness_partial_drop_prob: float = 0.10
+    robustness_directional_corrupt_prob: float = 0.10

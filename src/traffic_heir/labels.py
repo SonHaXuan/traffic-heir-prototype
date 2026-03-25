@@ -46,10 +46,10 @@ def decision_label(sample: Dict[str, object], config: PrototypeConfig | None = N
     # If the local state is ambiguous, neighboring intersections can flip the
     # recommendation to reduce spillback along the corridor.
     if abs(local_margin) < cfg.ambiguity_threshold:
-        decision_value = local_margin - 0.8 * neighbor_margin + 0.04 * elapsed
+        decision_value = local_margin - cfg.neighbor_margin_weight * neighbor_margin + cfg.elapsed_weight * elapsed
         return 0 if decision_value >= 0 else 1
 
     elapsed_bias = 0.02 * elapsed
-    ns_score = ns_pressure + 0.10 * neighbor_ew + elapsed_bias
-    ew_score = ew_pressure + 0.10 * neighbor_ns - elapsed_bias
+    ns_score = ns_pressure + cfg.neighbor_ew_bonus * neighbor_ew + elapsed_bias
+    ew_score = ew_pressure + cfg.neighbor_ns_bonus * neighbor_ns - elapsed_bias
     return 0 if ns_score >= ew_score else 1

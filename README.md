@@ -62,9 +62,11 @@ traffic-heir-prototype/
 ```bash
 python3 scripts/run_prototype.py
 python3 scripts/export_heir_stub.py
+python3 scripts/check_export_consistency.py
 python3 scripts/smoke_test.py
 python3 scripts/sumo_scaffold.py
-python3 scripts/prepare_sumo_csv.py path/to/sumo_states.csv
+python3 scripts/prepare_sumo_csv.py data/sumo/raw/sample_states.csv configs/sumo/sample_adjacency.json
+python3 scripts/action_space_demo.py
 ```
 
 ## Prototype outputs
@@ -87,10 +89,12 @@ Implemented in the current prototype:
 - cooperative plaintext learned model
 - cooperative HE-friendly learned model
 - ablation without interaction features
-- ablation without neighbor-summary features
-- SUMO directory/config scaffold for the next stage
-- robustness evaluation under noisy and missing neighbor sensing
+- corrected ablation without neighbor-summary features
+- robustness evaluation under noisy, missing, partial-drop, and directional-corruption sensing
 - initial SUMO CSV parser and cooperative-sample builder
+- adjacency-aware SUMO sample construction
+- HEIR export shape/consistency checks
+- 4-action decision-support scaffold
 
 ## Planned next steps
 

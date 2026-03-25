@@ -7,7 +7,10 @@ SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
 
 from traffic_heir.config import PrototypeConfig
+from traffic_heir.heir_consistency import check_export_shape, manual_forward_sample
 from traffic_heir.heir_export import export_heir_stub
+from traffic_heir.sumo_data import build_samples_from_grouped, group_by_timestep, load_sumo_csv
+from traffic_heir.synthetic import generate_dataset
 from traffic_heir.train import run_experiment
 
 
@@ -30,7 +33,18 @@ def main() -> None:
     out = ROOT / "generated" / "smoke_heir_stub.py"
     export_heir_stub(coop, out)
     assert out.exists()
-    assert "@compile(scheme='ckks')" in out.read_text(encoding="utf-8")
+    assert check_export_shape(coop, out)
+    score = manual_forward_sample(coop, generate_dataset(config)[0])
+    assert isinstance(score, float)
+
+    sample_csv = ROOT / "data" / "sumo" / "raw" / "sample_states.csv"
+    rows = load_sumo_csv(sample_csv)
+    grouped = group_by_timestep(rows)
+    samples = build_samples_from_grouped(grouped)
+    assert len(rows) == 6
+    assert len(grouped) == 2
+    assert len(samples) == 6
+    assert "neighbor_mean" in samples[0]
     print("smoke test passed")
 
 

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Mapping, Sequence
+
+from .types import SumoRow, TrafficSample
 
 REQUIRED_COLUMNS = {
     "intersection_id",
@@ -19,16 +21,23 @@ REQUIRED_COLUMNS = {
     "elapsed",
 }
 
+AdjacencyMap = Mapping[str, Sequence[str]]
 
-def load_sumo_csv(path: str | Path) -> List[Dict[str, object]]:
+
+def load_sumo_csv(path: str | Path) -> List[SumoRow]:
     path = Path(path)
     with path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         missing = REQUIRED_COLUMNS - set(reader.fieldnames or [])
         if missing:
             raise ValueError(f"Missing SUMO columns: {sorted(missing)}")
-        rows: List[Dict[str, object]] = []
+        rows: List[SumoRow] = []
+        seen = set()
         for row in reader:
+            key = (row["intersection_id"], int(float(row["timestep"])))
+            if key in seen:
+                raise ValueError(f"Duplicate SUMO row for intersection/timestep: {key}")
+            seen.add(key)
             rows.append(
                 {
                     "intersection_id": row["intersection_id"],
@@ -50,27 +59,36 @@ def load_sumo_csv(path: str | Path) -> List[Dict[str, object]]:
     return rows
 
 
-def group_by_timestep(rows: Iterable[Dict[str, object]]) -> Dict[int, List[Dict[str, object]]]:
-    grouped: Dict[int, List[Dict[str, object]]] = {}
+def group_by_timestep(rows: Iterable[SumoRow]) -> Dict[int, List[SumoRow]]:
+    grouped: Dict[int, List[SumoRow]] = {}
     for row in rows:
-        timestep = int(row["timestep"])
-        grouped.setdefault(timestep, []).append(dict(row))
+        grouped.setdefault(row["timestep"], []).append(dict(row))
     return grouped
 
 
-def build_samples_from_grouped(grouped: Dict[int, List[Dict[str, object]]]) -> List[Dict[str, object]]:
-    samples: List[Dict[str, object]] = []
+def build_samples_from_grouped(
+    grouped: Dict[int, List[SumoRow]],
+    adjacency: AdjacencyMap | None = None,
+) -> List[TrafficSample]:
+    samples: List[TrafficSample] = []
     for timestep in sorted(grouped):
         rows = grouped[timestep]
-        for idx, row in enumerate(rows):
-            neighbors = [r for j, r in enumerate(rows) if j != idx]
+        row_by_id = {row["intersection_id"]: row for row in rows}
+        for row in rows:
+            if adjacency is None:
+                neighbors = [r for r in rows if r["intersection_id"] != row["intersection_id"]]
+            else:
+                neighbor_ids = adjacency.get(row["intersection_id"], [])
+                neighbors = [row_by_id[nid] for nid in neighbor_ids if nid in row_by_id]
             if not neighbors:
                 continue
-            local = list(row["local"])  # type: ignore[arg-type]
-            neighbor_mean = [sum(values) / len(neighbors) for values in zip(*[n["local"] for n in neighbors])]  # type: ignore[index]
+            local = list(row["local"])
+            neighbor_mean = [sum(values) / len(neighbors) for values in zip(*[n["local"] for n in neighbors])]
             interaction = [a * b / 20.0 for a, b in zip(local, neighbor_mean)]
             samples.append(
                 {
+                    "intersection_id": row["intersection_id"],
+                    "timestep": row["timestep"],
                     "local": local,
                     "neighbor_mean": neighbor_mean,
                     "interaction": interaction,
