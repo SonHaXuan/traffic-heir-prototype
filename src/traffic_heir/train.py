@@ -10,7 +10,7 @@ from .synthetic import generate_dataset
 
 def run_experiment(config: PrototypeConfig) -> Dict[str, object]:
     dataset = generate_dataset(config)
-    train_samples, val_samples = build_splits(dataset, config.train_ratio)
+    train_samples, val_samples = build_splits(dataset, config.train_ratio, seed=config.seed)
 
     x_train_local, y_train = build_xy(train_samples, mode="local")
     x_val_local, y_val = build_xy(val_samples, mode="local")
