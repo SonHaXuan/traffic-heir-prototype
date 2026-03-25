@@ -59,10 +59,10 @@ python3 scripts/export_heir_stub.py
 
 The prototype prints:
 - dataset summary
-- local heuristic accuracy
+- local-only heuristic accuracy
 - local MLP validation accuracy
 - cooperative HE-friendly model validation accuracy
-- plaintext/cooperative comparison
+- local-vs-cooperative comparison
 - a generated HEIR stub file for later encrypted inference work
 
 ## Planned next steps

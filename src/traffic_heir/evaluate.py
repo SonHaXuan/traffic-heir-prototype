@@ -1,14 +1,19 @@
 from __future__ import annotations
 
+import random
 from typing import Dict, List, Sequence, Tuple
 
 from .fusion import cooperative_features, local_features
-from .labels import decision_label
+from .labels import decision_label, local_heuristic_label
 
 
-def build_splits(dataset: Sequence[Dict[str, object]], train_ratio: float) -> Tuple[List[Dict[str, object]], List[Dict[str, object]]]:
-    split = int(len(dataset) * train_ratio)
-    return list(dataset[:split]), list(dataset[split:])
+def build_splits(
+    dataset: Sequence[Dict[str, object]], train_ratio: float, seed: int = 7
+) -> Tuple[List[Dict[str, object]], List[Dict[str, object]]]:
+    shuffled = list(dataset)
+    random.Random(seed).shuffle(shuffled)
+    split = int(len(shuffled) * train_ratio)
+    return shuffled[:split], shuffled[split:]
 
 
 def build_xy(samples: Sequence[Dict[str, object]], mode: str) -> Tuple[List[List[float]], List[int]]:
@@ -21,7 +26,7 @@ def build_xy(samples: Sequence[Dict[str, object]], mode: str) -> Tuple[List[List
 
 
 def heuristic_predict(samples: Sequence[Dict[str, object]]) -> List[int]:
-    return [decision_label(sample) for sample in samples]
+    return [local_heuristic_label(sample) for sample in samples]
 
 
 def accuracy(y_true: Sequence[int], y_pred: Sequence[int]) -> float:
