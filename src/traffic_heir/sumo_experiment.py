@@ -43,6 +43,8 @@ def run_sumo_binary_experiment(
         "val": len(val_samples),
         "label_distribution": distribution([decision_label(s, cfg) for s in samples]),
         "val_distribution": distribution(y_val),
+        "source_csv": str(csv_path),
+        "uses_adjacency": adjacency_path is not None,
     }
 
     for mode, (hidden_dim, he_friendly) in modes.items():
@@ -67,6 +69,11 @@ def run_sumo_binary_experiment(
     metrics["val_accuracy"] = metrics["coop_val_accuracy"]
     metrics["pred_distribution"] = metrics["coop_pred_distribution"]
     metrics["confusion"] = metrics["coop_confusion"]
+    metrics["eval_story"] = {
+        "cooperative_gain_over_local": round(float(metrics["coop_val_accuracy"]) - float(metrics["local_val_accuracy"]), 6),
+        "directional_gain_within_coop": round(float(metrics["coop_val_accuracy"]) - float(metrics["coop_no_direction_val_accuracy"]), 6),
+        "interaction_gain_within_coop": round(float(metrics["coop_val_accuracy"]) - float(metrics["coop_no_interaction_val_accuracy"]), 6),
+    }
     if report_path:
         write_metrics_report(metrics, report_path)
     return metrics

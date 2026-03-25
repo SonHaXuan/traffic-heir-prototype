@@ -11,7 +11,7 @@ from traffic_heir.config_io import apply_overrides, load_config, save_config
 from traffic_heir.fusion import cooperative_features
 from traffic_heir.heir_consistency import exported_matches_result
 from traffic_heir.heir_export import export_heir_stub
-from traffic_heir.metrics import distribution
+from traffic_heir.metrics import distribution, macro_f1_from_per_class, per_class_precision_recall_f1
 from traffic_heir.multiclass import predict_multiclass, train_multiclass
 from traffic_heir.sumo_data import build_samples_from_grouped, group_by_timestep, load_sumo_csv
 from traffic_heir.sumo_experiment import run_sumo_binary_experiment
@@ -60,9 +60,11 @@ class TrafficHeirTests(unittest.TestCase):
         )
         preds = predict_multiclass(result, [cooperative_features(s) for s in val_samples], he_friendly=True)
         pred_dist = distribution(preds)
+        per_class = per_class_precision_recall_f1(y_val, preds, [0, 1, 2, 3])
         self.assertGreaterEqual(result.val_accuracy, 0.55)
         self.assertGreaterEqual(len(pred_dist), 4)
         self.assertGreater(pred_dist.get(2, 0), 0)
+        self.assertGreater(macro_f1_from_per_class(per_class), 0.45)
 
     def test_heir_export_matches_manual_forward(self) -> None:
         cfg = PrototypeConfig(num_samples=120, epochs=40)
@@ -93,6 +95,8 @@ class TrafficHeirTests(unittest.TestCase):
         self.assertIn("coop_val_accuracy", metrics)
         self.assertIn("coop_no_direction_val_accuracy", metrics)
         self.assertIn("local_val_accuracy", metrics)
+        self.assertIn("eval_story", metrics)
+        self.assertIn("cooperative_gain_over_local", metrics["eval_story"])
 
 
 if __name__ == "__main__":

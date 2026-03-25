@@ -26,8 +26,14 @@ def main() -> None:
         rows.append({"experiment": "prototype_binary", "metric": "no_neighbor", "value": round(proto.get("ablation_no_neighbor", 0.0), 4)})
     if sumo:
         rows.append({"experiment": "sumo_binary", "metric": "val_accuracy", "value": round(sumo.get("val_accuracy", 0.0), 4)})
+        story = sumo.get("eval_story", {})
+        rows.append({"experiment": "sumo_binary", "metric": "coop_minus_local", "value": round(story.get("cooperative_gain_over_local", 0.0), 4)})
+        rows.append({"experiment": "sumo_binary", "metric": "coop_minus_no_direction", "value": round(story.get("directional_gain_within_coop", 0.0), 4)})
+        rows.append({"experiment": "sumo_binary", "metric": "coop_minus_no_interaction", "value": round(story.get("interaction_gain_within_coop", 0.0), 4)})
     if action4:
         rows.append({"experiment": "action4", "metric": "val_accuracy", "value": round(action4.get("val_accuracy", 0.0), 4)})
+        rows.append({"experiment": "action4", "metric": "macro_f1", "value": round(action4.get("macro_f1", 0.0), 4)})
+        rows.append({"experiment": "action4", "metric": "ovr_macro_f1", "value": round(action4.get("ovr_macro_f1", 0.0), 4)})
     out = reports / "paper_results_table.md"
     write_markdown_table(rows, out)
     print(f"wrote {out}")
