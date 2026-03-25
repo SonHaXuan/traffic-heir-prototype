@@ -1,0 +1,19 @@
+{
+  "num_samples": 600,
+  "num_intersections": 3,
+  "train_ratio": 0.8,
+  "seed": 7,
+  "local_hidden_dim": 12,
+  "coop_hidden_dim": 10,
+  "learning_rate": 0.01,
+  "epochs": 120,
+  "ambiguity_threshold": 6.0,
+  "neighbor_margin_weight": 0.8,
+  "elapsed_weight": 0.04,
+  "neighbor_ns_bonus": 0.10,
+  "neighbor_ew_bonus": 0.10,
+  "robustness_noise_std": 0.08,
+  "robustness_missing_prob": 0.15,
+  "robustness_partial_drop_prob": 0.10,
+  "robustness_directional_corrupt_prob": 0.10
+}

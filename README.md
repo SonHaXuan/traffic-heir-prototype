@@ -61,12 +61,15 @@ traffic-heir-prototype/
 
 ```bash
 python3 scripts/run_prototype.py
+python3 scripts/run_with_config.py configs/experiment/prototype_default.json
 python3 scripts/export_heir_stub.py
 python3 scripts/check_export_consistency.py
 python3 scripts/smoke_test.py
 python3 scripts/sumo_scaffold.py
 python3 scripts/prepare_sumo_csv.py data/sumo/raw/sample_states.csv configs/sumo/sample_adjacency.json
+python3 scripts/run_sumo_experiment.py data/sumo/raw/sample_states.csv configs/sumo/sample_adjacency.json
 python3 scripts/action_space_demo.py
+python3 scripts/run_action4_experiment.py
 ```
 
 ## Prototype outputs
