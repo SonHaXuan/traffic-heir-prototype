@@ -16,8 +16,10 @@ def main() -> None:
         raise SystemExit(1)
     csv_path = sys.argv[1]
     adjacency_path = sys.argv[2] if len(sys.argv) == 3 else None
-    result = run_sumo_binary_experiment(csv_path, adjacency_path, PrototypeConfig(num_samples=6, epochs=80))
+    report = ROOT / "reports" / "sumo_binary_metrics.json"
+    result = run_sumo_binary_experiment(csv_path, adjacency_path, PrototypeConfig(num_samples=6, epochs=80), report_path=report)
     print(result)
+    print("report:", report)
 
 
 if __name__ == "__main__":

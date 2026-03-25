@@ -31,6 +31,7 @@ def main() -> None:
     print(f"cooperative HE-friendly model val acc: {coop_he.val_accuracy:.4f}")
     print(f"ablation no-interaction val acc: {no_interaction.val_accuracy:.4f}")
     print(f"ablation no-neighbor val acc: {no_neighbor.val_accuracy:.4f}")
+    print(f"ablation no-direction val acc: {no_direction.val_accuracy:.4f}")
     print(f"cooperation gain over local: {coop_he.val_accuracy - local.val_accuracy:+.4f}")
     print("robustness accuracies:")
     for name, value in results["robustness"].items():

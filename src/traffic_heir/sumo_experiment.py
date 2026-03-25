@@ -5,9 +5,11 @@ from pathlib import Path
 from typing import Dict
 
 from .config import PrototypeConfig
-from .evaluate import accuracy, build_splits, build_xy
+from .evaluate import build_splits, build_xy
 from .labels import decision_label
-from .models import TrainResult, train_two_layer_network
+from .metrics import confusion_counts, distribution
+from .models import TrainResult, predict_batch, train_two_layer_network
+from .reporting import write_metrics_report
 from .sumo_data import build_samples_from_grouped, group_by_timestep, load_sumo_csv
 
 
@@ -15,6 +17,7 @@ def run_sumo_binary_experiment(
     csv_path: str | Path,
     adjacency_path: str | Path | None = None,
     config: PrototypeConfig | None = None,
+    report_path: str | Path | None = None,
 ) -> Dict[str, object]:
     cfg = config or PrototypeConfig(num_samples=6, epochs=80)
     rows = load_sumo_csv(csv_path)
@@ -40,12 +43,19 @@ def run_sumo_binary_experiment(
         seed=cfg.seed,
         he_friendly=True,
     )
-    label_distribution = {0: sum(1 for s in samples if decision_label(s, cfg) == 0), 1: sum(1 for s in samples if decision_label(s, cfg) == 1)}
-    return {
+    preds = predict_batch(x_val, result.weights1, result.bias1, result.weights2, result.bias2, True)
+    label_distribution = distribution([decision_label(s, cfg) for s in samples])
+    metrics = {
         "rows": len(rows),
         "samples": len(samples),
         "train": len(train_samples),
         "val": len(val_samples),
         "val_accuracy": result.val_accuracy,
         "label_distribution": label_distribution,
+        "val_distribution": distribution(y_val),
+        "pred_distribution": distribution(preds),
+        "confusion": confusion_counts(y_val, preds),
     }
+    if report_path:
+        write_metrics_report(metrics, report_path)
+    return metrics

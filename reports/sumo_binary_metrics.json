@@ -1,0 +1,24 @@
+{
+  "confusion": {
+    "0->0": 14,
+    "0->1": 1,
+    "1->1": 9
+  },
+  "label_distribution": {
+    "0": 67,
+    "1": 53
+  },
+  "pred_distribution": {
+    "0": 14,
+    "1": 10
+  },
+  "rows": 120,
+  "samples": 120,
+  "train": 96,
+  "val": 24,
+  "val_accuracy": 0.9583333333333334,
+  "val_distribution": {
+    "0": 15,
+    "1": 9
+  }
+}

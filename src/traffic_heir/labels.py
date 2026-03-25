@@ -49,15 +49,15 @@ def decision_label(sample: TrafficSample, config: PrototypeConfig | None = None)
 
     if abs(local_margin) < cfg.ambiguity_threshold:
         decision_value = (
-            local_margin
+            0.85 * local_margin
             - cfg.neighbor_margin_weight * (neighbor_ns - neighbor_ew)
             + cfg.directional_weight * directional_margin
-            - 0.15 * spillback_penalty
+            - 0.22 * spillback_penalty
             + cfg.elapsed_weight * elapsed
         )
         return 0 if decision_value >= 0 else 1
 
     elapsed_bias = 0.02 * elapsed
-    ns_score = ns_pressure + cfg.neighbor_ew_bonus * neighbor_ew + cfg.directional_weight * (up_ns - down_ns) - 0.1 * spillback_penalty + elapsed_bias
-    ew_score = ew_pressure + cfg.neighbor_ns_bonus * neighbor_ns + cfg.directional_weight * (up_ew - down_ew) + 0.1 * spillback_penalty - elapsed_bias
+    ns_score = ns_pressure + cfg.neighbor_ew_bonus * neighbor_ew + 1.25 * cfg.directional_weight * (up_ns - down_ns) - 0.18 * spillback_penalty + elapsed_bias
+    ew_score = ew_pressure + cfg.neighbor_ns_bonus * neighbor_ns + 1.25 * cfg.directional_weight * (up_ew - down_ew) + 0.18 * spillback_penalty - elapsed_bias
     return 0 if ns_score >= ew_score else 1
