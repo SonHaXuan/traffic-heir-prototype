@@ -66,6 +66,25 @@ def group_by_timestep(rows: Iterable[SumoRow]) -> Dict[int, List[SumoRow]]:
     return grouped
 
 
+def _directional_summary(row: SumoRow, row_by_id: Dict[str, SumoRow], neighbor_ids: Sequence[str]) -> List[float]:
+    if not neighbor_ids:
+        return [0.0] * 8
+    first = row_by_id[neighbor_ids[0]] if neighbor_ids[0] in row_by_id else row
+    last = row_by_id[neighbor_ids[-1]] if neighbor_ids[-1] in row_by_id else row
+    up = first["local"]
+    down = last["local"]
+    return [
+        up[0] + up[1],
+        up[2] + up[3],
+        down[0] + down[1],
+        down[2] + down[3],
+        up[4] + up[5],
+        up[6] + up[7],
+        down[4] + down[5],
+        down[6] + down[7],
+    ]
+
+
 def build_samples_from_grouped(
     grouped: Dict[int, List[SumoRow]],
     adjacency: AdjacencyMap | None = None,
@@ -76,14 +95,16 @@ def build_samples_from_grouped(
         row_by_id = {row["intersection_id"]: row for row in rows}
         for row in rows:
             if adjacency is None:
+                neighbor_ids = [r["intersection_id"] for r in rows if r["intersection_id"] != row["intersection_id"]]
                 neighbors = [r for r in rows if r["intersection_id"] != row["intersection_id"]]
             else:
-                neighbor_ids = adjacency.get(row["intersection_id"], [])
+                neighbor_ids = list(adjacency.get(row["intersection_id"], []))
                 neighbors = [row_by_id[nid] for nid in neighbor_ids if nid in row_by_id]
             if not neighbors:
                 continue
             local = list(row["local"])
             neighbor_mean = [sum(values) / len(neighbors) for values in zip(*[n["local"] for n in neighbors])]
+            neighbor_directional = _directional_summary(row, row_by_id, neighbor_ids)
             interaction = [a * b / 20.0 for a, b in zip(local, neighbor_mean)]
             samples.append(
                 {
@@ -91,6 +112,7 @@ def build_samples_from_grouped(
                     "timestep": row["timestep"],
                     "local": local,
                     "neighbor_mean": neighbor_mean,
+                    "neighbor_directional": neighbor_directional,
                     "interaction": interaction,
                     "phase": row["phase"],
                     "elapsed": row["elapsed"],

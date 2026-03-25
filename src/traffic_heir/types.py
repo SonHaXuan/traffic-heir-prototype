@@ -9,6 +9,7 @@ Action4 = Literal[0, 1, 2, 3]
 class TrafficSample(TypedDict, total=False):
     local: List[float]
     neighbor_mean: List[float]
+    neighbor_directional: List[float]
     interaction: List[float]
     phase: float
     elapsed: float

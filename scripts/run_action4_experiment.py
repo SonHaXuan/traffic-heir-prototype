@@ -9,7 +9,9 @@ sys.path.insert(0, str(SRC))
 
 from traffic_heir.action_space import decision_label_4
 from traffic_heir.config import PrototypeConfig
-from traffic_heir.multiclass import train_one_vs_rest
+from traffic_heir.fusion import cooperative_features
+from traffic_heir.multiclass import predict_one_vs_rest, train_one_vs_rest
+from traffic_heir.reporting import write_metrics_report
 from traffic_heir.synthetic import generate_dataset
 from traffic_heir.evaluate import build_splits
 
@@ -33,8 +35,17 @@ def main() -> None:
         seed=config.seed,
         he_friendly=True,
     )
+    x_val = [cooperative_features(s) for s in val_samples]
+    preds = predict_one_vs_rest(result.models, result.classes, x_val, he_friendly=True)
+    confusion = {}
+    for truth, pred in zip(y_val, preds):
+        confusion[f"{truth}->{pred}"] = confusion.get(f"{truth}->{pred}", 0) + 1
+    report = ROOT / "reports" / "action4_metrics.json"
+    write_metrics_report({"val_accuracy": result.val_accuracy, "label_distribution": dict(sorted(Counter(y_val).items())), "prediction_distribution": dict(sorted(Counter(preds).items())), "confusion": confusion}, report)
     print("action4 val accuracy:", round(result.val_accuracy, 4))
     print("val label distribution:", dict(sorted(Counter(y_val).items())))
+    print("prediction distribution:", dict(sorted(Counter(preds).items())))
+    print("report:", report)
 
 
 if __name__ == "__main__":

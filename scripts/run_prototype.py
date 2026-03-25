@@ -18,6 +18,7 @@ def main() -> None:
     coop_he = results["coop_result"]
     no_interaction = results["ablation_no_interaction"]
     no_neighbor = results["ablation_no_neighbor"]
+    no_direction = results["ablation_no_direction"]
 
     print("=== traffic-heir prototype ===")
     print(f"dataset size: {results['dataset_size']}")

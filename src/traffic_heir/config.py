@@ -17,6 +17,8 @@ class PrototypeConfig:
     elapsed_weight: float = 0.04
     neighbor_ns_bonus: float = 0.10
     neighbor_ew_bonus: float = 0.10
+    directional_weight: float = 0.35
+    spillback_penalty_weight: float = 0.45
     robustness_noise_std: float = 0.08
     robustness_missing_prob: float = 0.15
     robustness_partial_drop_prob: float = 0.10

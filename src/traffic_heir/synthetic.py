@@ -19,7 +19,7 @@ def _intersection_state(rng: random.Random, idx: int, corridor_bias: float, cros
     w_e = q_e * rng.uniform(0.6, 1.3)
     w_w = q_w * rng.uniform(0.6, 1.3)
     elapsed = rng.uniform(0, 60)
-    phase = rng.choice([0.0, 1.0])  # 0=NS green, 1=EW green
+    phase = rng.choice([0.0, 1.0])
     return {
         "q_n": q_n,
         "q_s": q_s,
@@ -47,6 +47,21 @@ def _as_vector(state: dict[str, float]) -> List[float]:
     ]
 
 
+def _directional_summary(local_idx: int, states: List[dict[str, float]]) -> List[float]:
+    upstream = states[max(0, local_idx - 1)]
+    downstream = states[min(len(states) - 1, local_idx + 1)]
+    return [
+        upstream["q_n"] + upstream["q_s"],
+        upstream["q_e"] + upstream["q_w"],
+        downstream["q_n"] + downstream["q_s"],
+        downstream["q_e"] + downstream["q_w"],
+        upstream["w_n"] + upstream["w_s"],
+        upstream["w_e"] + upstream["w_w"],
+        downstream["w_n"] + downstream["w_s"],
+        downstream["w_e"] + downstream["w_w"],
+    ]
+
+
 def generate_dataset(config: PrototypeConfig) -> List[TrafficSample]:
     rng = random.Random(config.seed)
     dataset: List[TrafficSample] = []
@@ -56,21 +71,23 @@ def generate_dataset(config: PrototypeConfig) -> List[TrafficSample]:
         cross_bias = rng.uniform(-0.18, 0.22)
         states = []
         for i in range(config.num_intersections):
-            local_corridor = corridor_bias + (0.08 if i == 0 else -0.08 if i == config.num_intersections - 1 else 0.0)
-            local_cross = cross_bias + (-0.08 if i == 0 else 0.08 if i == config.num_intersections - 1 else 0.0)
+            local_corridor = corridor_bias + (0.14 if i == 0 else -0.14 if i == config.num_intersections - 1 else 0.0)
+            local_cross = cross_bias + (-0.12 if i == 0 else 0.12 if i == config.num_intersections - 1 else 0.0)
             states.append(_intersection_state(rng, i, local_corridor, local_cross))
+
         target_idx = rng.randrange(config.num_intersections)
         target = states[target_idx]
         neighbors = [s for i, s in enumerate(states) if i != target_idx]
-
         local = _as_vector(target)
         neighbor_mean = [sum(values) / len(neighbors) for values in zip(*[_as_vector(n) for n in neighbors])]
+        neighbor_directional = _directional_summary(target_idx, states)
         interaction = [a * b / 20.0 for a, b in zip(local, neighbor_mean)]
 
         dataset.append(
             {
                 "local": local,
                 "neighbor_mean": neighbor_mean,
+                "neighbor_directional": neighbor_directional,
                 "interaction": interaction,
                 "phase": target["phase"],
                 "elapsed": target["elapsed"],

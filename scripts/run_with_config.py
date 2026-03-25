@@ -15,12 +15,14 @@ def main() -> None:
         print("usage: python3 scripts/run_with_config.py <config.json>")
         raise SystemExit(1)
     config = load_config(sys.argv[1])
-    results = run_experiment(config)
+    report = ROOT / "reports" / "prototype_default_metrics.json"
+    results = run_experiment(config, report_path=str(report))
     print({
         "dataset_size": results["dataset_size"],
         "local": round(results["local_result"].val_accuracy, 4),
         "coop_plain": round(results["coop_plaintext_result"].val_accuracy, 4),
         "coop_he": round(results["coop_result"].val_accuracy, 4),
+        "report": str(report),
     })
 
 
