@@ -8,6 +8,7 @@
 | seed_sweep | coop_gain_over_local_mean | 0.05 |
 | action4 | val_accuracy | 0.6597 |
 | action4 | macro_f1 | 0.5872 |
+| action4 | macro_f1_minus_ovr | 0.0422 |
 | heir_export | shape_check_passed | True |
 | heir_export | consistency_check_passed | True |
 | heir_export | metadata_val_accuracy | 0.5833 |

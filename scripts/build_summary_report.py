@@ -55,6 +55,7 @@ def main() -> None:
             "macro_f1": safe_round(action4.get("macro_f1")),
             "ovr_val_accuracy": safe_round(action4.get("ovr_val_accuracy")),
             "ovr_macro_f1": safe_round(action4.get("ovr_macro_f1")),
+            "macro_f1_minus_ovr": safe_round(action4.get("macro_f1", 0.0) - action4.get("ovr_macro_f1", 0.0)),
         },
         "heir_export": {
             "shape_check_passed": bool(heir.get("shape_check_passed", False)),
@@ -86,6 +87,7 @@ def main() -> None:
         {"section": "seed_sweep", "metric": "coop_gain_over_local_mean", "value": summary["seed_sweep"]["coop_gain_over_local_mean"]},
         {"section": "action4", "metric": "val_accuracy", "value": summary["action4"]["val_accuracy"]},
         {"section": "action4", "metric": "macro_f1", "value": summary["action4"]["macro_f1"]},
+        {"section": "action4", "metric": "macro_f1_minus_ovr", "value": summary["action4"]["macro_f1_minus_ovr"]},
         {"section": "heir_export", "metric": "shape_check_passed", "value": summary["heir_export"]["shape_check_passed"]},
         {"section": "heir_export", "metric": "consistency_check_passed", "value": summary["heir_export"]["consistency_check_passed"]},
         {"section": "heir_export", "metric": "metadata_val_accuracy", "value": summary["heir_export"]["metadata_val_accuracy"]},

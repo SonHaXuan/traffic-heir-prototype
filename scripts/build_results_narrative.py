@@ -39,6 +39,16 @@ def main() -> None:
     action4_acc = float(action4.get("val_accuracy", 0.0))
     action4_macro = float(action4.get("macro_f1", 0.0))
     ovr_macro = float(action4.get("ovr_macro_f1", 0.0))
+    per_class = action4.get("per_class", {})
+    label_dist = {int(k): int(v) for k, v in action4.get("label_distribution", {}).items()}
+    best_cls = None
+    worst_cls = None
+    if per_class:
+        scored = [(int(cls), float(stats.get("f1", 0.0))) for cls, stats in per_class.items()]
+        best_cls = max(scored, key=lambda x: x[1])
+        worst_cls = min(scored, key=lambda x: x[1])
+    majority_cls = max(label_dist.items(), key=lambda x: x[1])[0] if label_dist else None
+    minority_cls = min(label_dist.items(), key=lambda x: x[1])[0] if label_dist else None
     sumo_story = sumo.get("eval_story", {})
 
     lines = [
@@ -58,6 +68,13 @@ def main() -> None:
         "- The clearest empirical story so far is that cooperative fusion helps the binary decision-support task and that the HE-friendly approximation retains most of that benefit.",
         "- The current infrastructure is strongest on reproducibility: one-shot artifact generation, summary reporting, HEIR export verification, and report validation are now in place.",
         "- The multiclass/action4 path is promising but not yet as strong as the binary story; macro-F1 suggests class imbalance and decision difficulty still need attention.",
+        "",
+        "## Action4 interpretation",
+        "",
+        f"- The majority class is **class {majority_cls}** with **{label_dist.get(majority_cls, 0)}** validation examples, while the minority class is **class {minority_cls}** with **{label_dist.get(minority_cls, 0)}** examples.",
+        f"- The strongest multiclass F1 is **class {best_cls[0]} = {fmt(best_cls[1])}** and the weakest is **class {worst_cls[0]} = {fmt(worst_cls[1])}**.",
+        f"- Compared with one-vs-rest, the multiclass model changes macro-F1 by **{fmt(action4_macro - ovr_macro)}**, suggesting that the current joint classifier is {'better' if action4_macro >= ovr_macro else 'worse'} overall on balanced class performance.",
+        f"- The gap between majority and minority support (**{label_dist.get(majority_cls, 0)} vs {label_dist.get(minority_cls, 0)}**) is consistent with the narrative that imbalance is still shaping the multiclass difficulty.",
         "",
         "## Caveats",
         "",

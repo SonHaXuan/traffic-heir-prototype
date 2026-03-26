@@ -1,6 +1,7 @@
 {
   "action4": {
     "macro_f1": 0.5872,
+    "macro_f1_minus_ovr": 0.0422,
     "ovr_macro_f1": 0.545,
     "ovr_val_accuracy": 0.6806,
     "val_accuracy": 0.6597

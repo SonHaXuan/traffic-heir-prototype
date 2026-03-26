@@ -15,6 +15,13 @@
 - The current infrastructure is strongest on reproducibility: one-shot artifact generation, summary reporting, HEIR export verification, and report validation are now in place.
 - The multiclass/action4 path is promising but not yet as strong as the binary story; macro-F1 suggests class imbalance and decision difficulty still need attention.
 
+## Action4 interpretation
+
+- The majority class is **class 0** with **87** validation examples, while the minority class is **class 3** with **12** examples.
+- The strongest multiclass F1 is **class 0 = 0.7662** and the weakest is **class 3 = 0.4118**.
+- Compared with one-vs-rest, the multiclass model changes macro-F1 by **0.0422**, suggesting that the current joint classifier is better overall on balanced class performance.
+- The gap between majority and minority support (**87 vs 12**) is consistent with the narrative that imbalance is still shaping the multiclass difficulty.
+
 ## Caveats
 
 - The SUMO binary experiment is still too small to serve as a main quantitative claim.
