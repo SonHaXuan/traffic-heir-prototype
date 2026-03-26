@@ -1,0 +1,81 @@
+{
+  "adjacency_nodes": 5,
+  "confusion": {
+    "0->0": 52,
+    "1->0": 12,
+    "1->1": 36
+  },
+  "coop_confusion": {
+    "0->0": 52,
+    "1->0": 12,
+    "1->1": 36
+  },
+  "coop_no_direction_confusion": {
+    "0->0": 48,
+    "0->1": 4,
+    "1->0": 9,
+    "1->1": 39
+  },
+  "coop_no_direction_pred_distribution": {
+    "0": 57,
+    "1": 43
+  },
+  "coop_no_direction_val_accuracy": 0.87,
+  "coop_no_interaction_confusion": {
+    "0->0": 52,
+    "1->0": 12,
+    "1->1": 36
+  },
+  "coop_no_interaction_pred_distribution": {
+    "0": 64,
+    "1": 36
+  },
+  "coop_no_interaction_val_accuracy": 0.88,
+  "coop_pred_distribution": {
+    "0": 64,
+    "1": 36
+  },
+  "coop_val_accuracy": 0.88,
+  "eval_story": {
+    "cooperative_gain_over_local": 0.05,
+    "directional_gain_within_coop": 0.01,
+    "interaction_gain_within_coop": 0.0,
+    "label_balance_gap_train_val": 0.6,
+    "sample_per_timestep": 5.0
+  },
+  "label_distribution": {
+    "0": 255,
+    "1": 245
+  },
+  "local_confusion": {
+    "0->0": 46,
+    "0->1": 6,
+    "1->0": 11,
+    "1->1": 37
+  },
+  "local_pred_distribution": {
+    "0": 57,
+    "1": 43
+  },
+  "local_val_accuracy": 0.83,
+  "pred_distribution": {
+    "0": 64,
+    "1": 36
+  },
+  "rows": 500,
+  "samples": 500,
+  "source_csv": "/home/node/openclaw-configs/echo/workspace/traffic-heir-prototype/data/sumo/raw/large_states.csv",
+  "timesteps": 100,
+  "train": 400,
+  "train_distribution": {
+    "0": 203,
+    "1": 197
+  },
+  "uses_adjacency": true,
+  "val": 100,
+  "val_accuracy": 0.88,
+  "val_distribution": {
+    "0": 52,
+    "1": 48
+  }
+}

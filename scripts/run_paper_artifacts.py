@@ -29,6 +29,7 @@ def main() -> None:
             "configs/sumo/sample_adjacency.json",
         ],
     )
+    run_step("sumo_large", ["scripts/run_sumo_large_experiment.py"])
     run_step("paper_tables", ["scripts/build_paper_tables.py"])
     run_step("summary_report", ["scripts/build_summary_report.py"])
     run_step("results_narrative", ["scripts/build_results_narrative.py"])

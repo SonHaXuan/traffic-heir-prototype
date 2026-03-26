@@ -13,6 +13,7 @@ REQUIRED = {
     "action4_metrics.json": ["val_accuracy", "macro_f1", "ovr_macro_f1"],
     "heir_export_report.json": ["shape_check_passed", "consistency_check_passed", "export_path"],
     "sumo_binary_metrics.json": ["val_accuracy", "samples", "timesteps", "eval_story"],
+    "sumo_large_metrics.json": ["val_accuracy", "samples", "timesteps", "eval_story", "adjacency_nodes"],
     "summary_report.json": ["prototype", "seed_sweep", "action4", "heir_export", "sumo_binary"],
     "key_numbers.json": ["main_result", "seed_sweep", "robustness", "ablation"],
     "paper_results_table.md": "table",
@@ -56,6 +57,11 @@ def main() -> None:
                 require(r"\begin{table}" in text, f"LaTeX artifact missing \\begin{{table}}: {name}")
                 require(r"\toprule" in text, f"LaTeX artifact missing \\toprule (booktabs): {name}")
         checked.append(name)
+
+    sumo_large = load_json(REPORTS / "sumo_large_metrics.json")
+    require(sumo_large["samples"] >= 400, "SUMO large dataset should have >=400 samples")
+    require(sumo_large["adjacency_nodes"] >= 5, "SUMO large should use >=5 intersection nodes")
+    require(sumo_large["val_accuracy"] > 0.7, "SUMO large val accuracy should be >70%")
 
     summary = load_json(REPORTS / "summary_report.json")
     require(summary["heir_export"]["shape_check_passed"] is True, "HEIR shape check must pass")
