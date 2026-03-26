@@ -62,6 +62,7 @@ def main() -> None:
     require(sumo_large["samples"] >= 400, "SUMO large dataset should have >=400 samples")
     require(sumo_large["adjacency_nodes"] >= 5, "SUMO large should use >=5 intersection nodes")
     require(sumo_large["val_accuracy"] > 0.7, "SUMO large val accuracy should be >70%")
+    require(sumo_large.get("split_mode") == "temporal", "SUMO large must use temporal split to avoid leakage")
 
     summary = load_json(REPORTS / "summary_report.json")
     require(summary["heir_export"]["shape_check_passed"] is True, "HEIR shape check must pass")

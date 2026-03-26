@@ -51,6 +51,7 @@ def main():
         adjacency_path=ADJ_PATH,
         config=cfg,
         report_path=REPORT_PATH,
+        split_mode="temporal",  # avoid temporal leakage
     )
 
     # Print summary

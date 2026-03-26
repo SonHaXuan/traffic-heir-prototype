@@ -13,12 +13,35 @@ from .reporting import write_metrics_report
 from .sumo_data import build_samples_from_grouped, group_by_timestep, load_sumo_csv
 
 
+def _temporal_split(
+    samples: list, train_ratio: float
+) -> tuple:
+    """Split by timestep: first train_ratio% of timesteps → train, rest → val.
+    Avoids temporal leakage where adjacent timestep features are near-identical.
+    """
+    if not samples:
+        return [], []
+    max_ts = max(s["timestep"] for s in samples)
+    split_ts = int(max_ts * train_ratio)
+    train = [s for s in samples if s["timestep"] <= split_ts]
+    val = [s for s in samples if s["timestep"] > split_ts]
+    return train, val
+
+
 def run_sumo_binary_experiment(
     csv_path: str | Path,
     adjacency_path: str | Path | None = None,
     config: PrototypeConfig | None = None,
     report_path: str | Path | None = None,
+    split_mode: str = "random",
 ) -> Dict[str, object]:
+    """
+    Run the SUMO binary cooperative inference experiment.
+
+    Args:
+        split_mode: "random" (default, original behaviour) or "temporal"
+                    (split by timestep to avoid temporal leakage).
+    """
     cfg = config or PrototypeConfig(num_samples=6, epochs=80)
     rows = load_sumo_csv(csv_path)
     grouped = group_by_timestep(rows)
@@ -26,7 +49,10 @@ def run_sumo_binary_experiment(
     if adjacency_path is not None:
         adjacency = json.loads(Path(adjacency_path).read_text(encoding="utf-8"))
     samples = build_samples_from_grouped(grouped, adjacency=adjacency)
-    train_samples, val_samples = build_splits(samples, cfg.train_ratio, seed=cfg.seed)
+    if split_mode == "temporal":
+        train_samples, val_samples = _temporal_split(samples, cfg.train_ratio)
+    else:
+        train_samples, val_samples = build_splits(samples, cfg.train_ratio, seed=cfg.seed)
     _, y_train = build_xy(train_samples, mode="local")
     _, y_val = build_xy(val_samples, mode="local")
 
@@ -50,6 +76,7 @@ def run_sumo_binary_experiment(
         "source_csv": str(csv_path),
         "uses_adjacency": adjacency_path is not None,
         "adjacency_nodes": len(adjacency) if adjacency is not None else 0,
+        "split_mode": split_mode,
     }
 
     for mode, (hidden_dim, he_friendly) in modes.items():
