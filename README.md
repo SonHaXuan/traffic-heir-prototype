@@ -87,6 +87,9 @@ python3 scripts/run_sumo_experiment.py data/sumo/raw/sample_states.csv configs/s
 sh scripts/run_sumo_experiment_large_sample.sh
 python3 scripts/action_space_demo.py
 python3 scripts/run_action4_experiment.py
+python3 scripts/run_seed_sweep.py
+python3 scripts/build_paper_tables.py
+python3 scripts/run_paper_artifacts.py
 ```
 
 ## Prototype outputs
@@ -98,6 +101,20 @@ The prototype prints:
 - cooperative HE-friendly model validation accuracy
 - local-vs-cooperative comparison
 - a generated HEIR stub file for later encrypted inference work
+
+The experiment pipeline also writes reproducible artifacts under `reports/`, including:
+- `prototype_default_metrics.json`
+- `seed_sweep_metrics.json`
+- `seed_sweep_table.md`
+- `action4_metrics.json`
+- `sumo_binary_metrics.json`
+- `paper_results_table.md`
+
+To regenerate the paper-facing artifacts in one shot, run:
+
+```bash
+python3 scripts/run_paper_artifacts.py
+```
 
 ## Current baseline coverage
 

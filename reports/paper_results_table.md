@@ -1,8 +1,8 @@
 | experiment | metric | value |
 | --- | --- | --- |
-| prototype_binary | coop_he | 0.9167 |
-| prototype_binary | no_direction | 0.825 |
-| prototype_binary | no_neighbor | 0.8 |
+| prototype_binary | coop_he | 0.8417 |
+| prototype_binary | no_direction | 0.8083 |
+| prototype_binary | no_neighbor | 0.8083 |
 | sumo_binary | val_accuracy | 1.0 |
 | sumo_binary | coop_minus_local | 0.0 |
 | sumo_binary | coop_minus_no_direction | 0.0 |
