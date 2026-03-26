@@ -1,0 +1,32 @@
+{
+  "action4": {
+    "macro_f1": 0.5872,
+    "ovr_macro_f1": 0.545,
+    "ovr_val_accuracy": 0.6806,
+    "val_accuracy": 0.6597
+  },
+  "prototype": {
+    "coop_he_friendly": 0.8417,
+    "coop_minus_local": 0.0333,
+    "coop_minus_plaintext": -0.0083,
+    "coop_plaintext": 0.85,
+    "local_model": 0.8083,
+    "robust_coop_he": 0.8333,
+    "robust_local": 0.8083
+  },
+  "seed_sweep": {
+    "coop_gain_over_local_mean": 0.05,
+    "coop_he_mean": 0.8861,
+    "coop_he_stdev": 0.0342,
+    "local_mean": 0.8361,
+    "local_stdev": 0.0239
+  },
+  "sumo_binary": {
+    "cooperative_gain_over_local": 0.0,
+    "directional_gain_within_coop": 0.0,
+    "interaction_gain_within_coop": 1.0,
+    "samples": 6,
+    "uses_adjacency": true,
+    "val_accuracy": 1.0
+  }
+}

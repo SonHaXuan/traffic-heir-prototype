@@ -109,6 +109,8 @@ The experiment pipeline also writes reproducible artifacts under `reports/`, inc
 - `action4_metrics.json`
 - `sumo_binary_metrics.json`
 - `paper_results_table.md`
+- `summary_report.json`
+- `summary_report.md`
 
 To regenerate the paper-facing artifacts in one shot, run:
 

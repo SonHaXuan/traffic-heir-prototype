@@ -1,0 +1,12 @@
+| section | metric | value |
+| --- | --- | --- |
+| prototype | local_model | 0.8083 |
+| prototype | coop_he_friendly | 0.8417 |
+| prototype | coop_minus_local | 0.0333 |
+| seed_sweep | local_mean | 0.8361 |
+| seed_sweep | coop_he_mean | 0.8861 |
+| seed_sweep | coop_gain_over_local_mean | 0.05 |
+| action4 | val_accuracy | 0.6597 |
+| action4 | macro_f1 | 0.5872 |
+| sumo_binary | val_accuracy | 1.0 |
+| sumo_binary | interaction_gain_within_coop | 1.0 |
