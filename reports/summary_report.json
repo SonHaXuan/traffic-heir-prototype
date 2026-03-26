@@ -30,15 +30,29 @@
     "local_stdev": 0.0239
   },
   "sumo_binary": {
-    "adjacency_nodes": 3,
+    "adjacency_nodes": 5,
+    "cooperative_gain_over_local": 0.04,
+    "directional_gain_within_coop": 0.03,
+    "interaction_gain_within_coop": -0.03,
+    "label_balance_gap_train_val": 0.6,
+    "note": "toy sanity-check (random split); superseded by sumo_large",
+    "sample_per_timestep": 5.0,
+    "samples": 500,
+    "timesteps": 100,
+    "uses_adjacency": true,
+    "val_accuracy": 0.88
+  },
+  "sumo_large": {
+    "adjacency_nodes": 5,
+    "coop_val_accuracy": 0.85,
     "cooperative_gain_over_local": 0.0,
     "directional_gain_within_coop": 0.0,
-    "interaction_gain_within_coop": 1.0,
-    "label_balance_gap_train_val": 0.3333,
-    "sample_per_timestep": 3.0,
-    "samples": 6,
-    "timesteps": 2,
+    "local_val_accuracy": 0.85,
+    "note": "500 samples, 5 nodes, temporal split; no cooperative gain yet \u2014 limitation noted",
+    "samples": 500,
+    "split_mode": "temporal",
+    "timesteps": 100,
     "uses_adjacency": true,
-    "val_accuracy": 1.0
+    "val_accuracy": 0.85
   }
 }

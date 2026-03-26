@@ -28,6 +28,7 @@ def main() -> None:
     seed = load_json(reports / "seed_sweep_metrics.json")
     action4 = load_json(reports / "action4_metrics.json")
     sumo = load_json(reports / "sumo_binary_metrics.json")
+    sumo_large = load_json(reports / "sumo_large_metrics.json")
     heir = load_json(reports / "heir_export_report.json")
 
     summary = {
@@ -75,6 +76,20 @@ def main() -> None:
             "samples": int(sumo.get("samples", 0)) if sumo else 0,
             "timesteps": int(sumo.get("timesteps", 0)) if sumo else 0,
             "adjacency_nodes": int(sumo.get("adjacency_nodes", 0)) if sumo else 0,
+            "note": "toy sanity-check (random split); superseded by sumo_large",
+        },
+        "sumo_large": {
+            "val_accuracy": safe_round(sumo_large.get("val_accuracy")),
+            "coop_val_accuracy": safe_round(sumo_large.get("coop_val_accuracy")),
+            "local_val_accuracy": safe_round(sumo_large.get("local_val_accuracy")),
+            "cooperative_gain_over_local": safe_round(sumo_large.get("eval_story", {}).get("cooperative_gain_over_local")),
+            "directional_gain_within_coop": safe_round(sumo_large.get("eval_story", {}).get("directional_gain_within_coop")),
+            "uses_adjacency": bool(sumo_large.get("uses_adjacency", False)),
+            "samples": int(sumo_large.get("samples", 0)) if sumo_large else 0,
+            "timesteps": int(sumo_large.get("timesteps", 0)) if sumo_large else 0,
+            "adjacency_nodes": int(sumo_large.get("adjacency_nodes", 0)) if sumo_large else 0,
+            "split_mode": sumo_large.get("split_mode", "unknown"),
+            "note": "500 samples, 5 nodes, temporal split; no cooperative gain yet — limitation noted",
         },
     }
 
@@ -96,6 +111,12 @@ def main() -> None:
         {"section": "sumo_binary", "metric": "timesteps", "value": summary["sumo_binary"]["timesteps"]},
         {"section": "sumo_binary", "metric": "interaction_gain_within_coop", "value": summary["sumo_binary"]["interaction_gain_within_coop"]},
         {"section": "sumo_binary", "metric": "sample_per_timestep", "value": summary["sumo_binary"]["sample_per_timestep"]},
+        {"section": "sumo_large", "metric": "val_accuracy", "value": summary["sumo_large"]["val_accuracy"]},
+        {"section": "sumo_large", "metric": "coop_val_accuracy", "value": summary["sumo_large"]["coop_val_accuracy"]},
+        {"section": "sumo_large", "metric": "local_val_accuracy", "value": summary["sumo_large"]["local_val_accuracy"]},
+        {"section": "sumo_large", "metric": "cooperative_gain_over_local", "value": summary["sumo_large"]["cooperative_gain_over_local"]},
+        {"section": "sumo_large", "metric": "samples", "value": summary["sumo_large"]["samples"]},
+        {"section": "sumo_large", "metric": "split_mode", "value": summary["sumo_large"]["split_mode"]},
     ]
 
     summary_json = reports / "summary_report.json"

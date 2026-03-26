@@ -26,6 +26,7 @@ def main() -> None:
     seed = load_json("seed_sweep_metrics.json")
     action4 = load_json("action4_metrics.json")
     sumo = load_json("sumo_binary_metrics.json")
+    sumo_large = load_json("sumo_large_metrics.json")
     heir = load_json("heir_export_report.json")
 
     coop_he = float(proto.get("coop_he_friendly", 0.0))
@@ -60,12 +61,14 @@ def main() -> None:
         f"- Relative to the cooperative plaintext model (**{fmt(coop_plain)}**), the HE-friendly version changed accuracy by **{fmt(he_gap)}**, suggesting limited loss from the low-depth approximation in this prototype setting.",
         f"- Across the seed sweep, cooperative HE-friendly performance averaged **{fmt(seed_coop_mean)}** versus **{fmt(seed_local_mean)}** for local modeling, preserving an average gain of **{fmt(seed_gain)}**.",
         f"- In the 4-action setting, the multiclass model achieved **{fmt(action4_acc)}** accuracy and **{fmt(action4_macro)}** macro-F1, while the one-vs-rest variant reached **{fmt(ovr_macro)}** macro-F1.",
-        f"- The current SUMO-derived binary sample is tiny (**{sumo.get('samples', 'n/a')}** samples over **{sumo.get('timesteps', 'n/a')}** timesteps), so its **{fmt(sumo.get('val_accuracy'))}** validation accuracy should be treated as a pipeline sanity check rather than a robust performance claim.",
+        f"- The small SUMO sample (**{sumo.get('samples', 'n/a')}** samples, random split) is a pipeline sanity check only.",
+        f"- The expanded SUMO experiment (**{sumo_large.get('samples', 'n/a')}** samples, **{sumo_large.get('adjacency_nodes', 'n/a')}** nodes, **{sumo_large.get('timesteps', 'n/a')}** timesteps) uses a temporal split to avoid leakage. Under this rigorous split, coop and local models both reach **{fmt(sumo_large.get('coop_val_accuracy'))}** / **{fmt(sumo_large.get('local_val_accuracy'))}** — the cooperative gain is **0 pp**. This is an honest negative result: current cooperative features do not yet generalise to unseen future timesteps in the SUMO setting.",
         f"- The exported HEIR stub currently passes both structural and metadata consistency checks (**shape={heir.get('shape_check_passed', False)}**, **consistency={heir.get('consistency_check_passed', False)}**), supporting the export pathway without claiming end-to-end encrypted runtime execution.",
         "",
         "## Paper-friendly interpretation",
         "",
-        "- The clearest empirical story so far is that cooperative fusion helps the binary decision-support task and that the HE-friendly approximation retains most of that benefit.",
+        "- The clearest positive empirical story is the binary synthetic prototype: cooperative fusion improves accuracy, and HE-friendly approximation retains most of that benefit with minimal overhead.",
+        "- The expanded SUMO experiment reveals an important limitation: under a temporally correct split, cooperative features do not yet generalise to future timesteps. This motivates the next research direction — temporal or history-aware cooperative features.",
         "- The current infrastructure is strongest on reproducibility: one-shot artifact generation, summary reporting, HEIR export verification, and report validation are now in place.",
         "- The multiclass/action4 path is promising but not yet as strong as the binary story; macro-F1 suggests class imbalance and decision difficulty still need attention.",
         "",
@@ -78,15 +81,16 @@ def main() -> None:
         "",
         "## Caveats",
         "",
-        "- The SUMO binary experiment is still too small to serve as a main quantitative claim.",
-        "- HEIR support is currently validated at the export/consistency level, not full encrypted execution benchmarking.",
+        "- The small SUMO binary experiment used a random split and should not be used as a standalone performance claim.",
+        "- The large SUMO temporal split shows **no cooperative gain yet** — this is a known limitation and an honest negative result.",
+        "- HEIR support is validated at the export/consistency level, not full encrypted execution benchmarking.",
         "- The results are better framed as a paper-ready scaffold with emerging evidence, not a submission-ready benchmark package yet.",
         "",
         "## Recommended next steps",
         "",
-        "1. Expand SUMO-derived experiments to non-trivial sample sizes and richer scenarios.",
-        "2. Improve multiclass/action4 analysis, especially per-class weakness and imbalance handling.",
-        "3. Add figure-friendly summaries or plots for the strongest binary and seed-sweep findings.",
+        "1. Develop history-aware or temporally-informed cooperative features that can generalise across timesteps.",
+        "2. Add literature-adjacent baselines (e.g. aggregation-only, FedAvg-proxy) for direct comparison.",
+        "3. Improve multiclass/action4 analysis, especially per-class weakness and imbalance handling.",
         "4. If feasible, deepen the HEIR pathway beyond export validation into a more realistic compile/evaluate handoff.",
     ]
 
