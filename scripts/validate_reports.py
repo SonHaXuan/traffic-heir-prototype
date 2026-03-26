@@ -19,6 +19,8 @@ REQUIRED = {
     "summary_report.md": "table",
     "results_narrative.md": "narrative",
     "key_numbers.md": "table",
+    "latex_tables.tex": "latex",
+    "latex_tables.md": "table",
 }
 
 
@@ -44,12 +46,15 @@ def main() -> None:
                 require(key in payload, f"Missing key '{key}' in {name}")
         else:
             text = path.read_text(encoding="utf-8")
-            require(len(text.strip()) > 0, f"Markdown artifact is blank: {name}")
+            require(len(text.strip()) > 0, f"Markdown/tex artifact is blank: {name}")
             if spec == "table":
                 require("|" in text, f"Markdown artifact does not look tabular: {name}")
             elif spec == "narrative":
                 require(text.lstrip().startswith("#"), f"Narrative markdown should start with a heading: {name}")
                 require("Key findings" in text, f"Narrative markdown missing key findings section: {name}")
+            elif spec == "latex":
+                require(r"\begin{table}" in text, f"LaTeX artifact missing \\begin{{table}}: {name}")
+                require(r"\toprule" in text, f"LaTeX artifact missing \\toprule (booktabs): {name}")
         checked.append(name)
 
     summary = load_json(REPORTS / "summary_report.json")

@@ -33,6 +33,7 @@ def main() -> None:
     run_step("summary_report", ["scripts/build_summary_report.py"])
     run_step("results_narrative", ["scripts/build_results_narrative.py"])
     run_step("key_numbers", ["scripts/build_key_numbers.py"])
+    run_step("latex_tables", ["scripts/build_latex_tables.py"])
     run_step("validate_reports", ["scripts/validate_reports.py"])
     print("\nAll paper artifacts generated under reports/ and validated.")
 
