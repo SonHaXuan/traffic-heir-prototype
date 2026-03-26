@@ -14,9 +14,11 @@ REQUIRED = {
     "heir_export_report.json": ["shape_check_passed", "consistency_check_passed", "export_path"],
     "sumo_binary_metrics.json": ["val_accuracy", "samples", "timesteps", "eval_story"],
     "summary_report.json": ["prototype", "seed_sweep", "action4", "heir_export", "sumo_binary"],
+    "key_numbers.json": ["main_result", "seed_sweep", "robustness", "ablation"],
     "paper_results_table.md": "table",
     "summary_report.md": "table",
     "results_narrative.md": "narrative",
+    "key_numbers.md": "table",
 }
 
 

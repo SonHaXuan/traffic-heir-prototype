@@ -1,0 +1,51 @@
+{
+  "main_result": {
+    "coop_he_val_acc": 0.8417,
+    "local_model_val_acc": 0.8083,
+    "gain_over_local_pp": 3.33,
+    "coop_plaintext_val_acc": 0.85,
+    "he_overhead_pp": 0.83,
+    "best_traditional_baseline_val_acc": 0.775,
+    "gain_over_best_baseline_pp": 6.67
+  },
+  "robustness": {
+    "robust_coop_he_val_acc": 0.8333,
+    "robust_local_val_acc": 0.8083,
+    "robust_gain_pp": 2.5
+  },
+  "ablation": {
+    "remove_direction_val_acc": 0.8083,
+    "remove_interaction_val_acc": 0.85,
+    "remove_neighbor_val_acc": 0.8083,
+    "direction_contribution_pp": 3.33,
+    "interaction_contribution_pp": -0.83,
+    "neighbor_contribution_pp": 3.33
+  },
+  "seed_sweep": {
+    "n_seeds": 3,
+    "coop_he_mean": 0.8861,
+    "coop_he_std": 0.0342,
+    "local_mean": 0.8361,
+    "local_std": 0.0239,
+    "mean_gain_pp": 5.0
+  },
+  "sumo_binary": {
+    "val_accuracy": 1.0,
+    "samples": 6,
+    "timesteps": 2,
+    "uses_adjacency": true,
+    "interaction_gain_within_coop": 1.0,
+    "note": "Small sample (toy SUMO graph); perfect accuracy expected at this scale"
+  },
+  "action4_multiclass": {
+    "val_accuracy": 0.6597,
+    "macro_f1": 0.5872,
+    "ovr_macro_f1": 0.545,
+    "note": "4-class action prediction; binary story is primary claim"
+  },
+  "heir_export": {
+    "consistency_check_passed": true,
+    "shape_check_passed": true,
+    "metadata_val_accuracy": 0.5833
+  }
+}
