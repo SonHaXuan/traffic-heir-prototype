@@ -1,50 +1,63 @@
 {
   "adjacency_nodes": 5,
   "confusion": {
-    "0->0": 31,
-    "0->1": 14,
-    "1->0": 1,
-    "1->1": 54
+    "0->0": 33,
+    "0->1": 12,
+    "1->0": 2,
+    "1->1": 53
   },
   "coop_confusion": {
-    "0->0": 31,
-    "0->1": 14,
-    "1->0": 1,
-    "1->1": 54
+    "0->0": 33,
+    "0->1": 12,
+    "1->0": 2,
+    "1->1": 53
   },
   "coop_no_direction_confusion": {
-    "0->0": 31,
-    "0->1": 14,
-    "1->0": 1,
-    "1->1": 54
-  },
-  "coop_no_direction_pred_distribution": {
-    "0": 32,
-    "1": 68
-  },
-  "coop_no_direction_val_accuracy": 0.85,
-  "coop_no_interaction_confusion": {
     "0->0": 32,
     "0->1": 13,
     "1->0": 1,
     "1->1": 54
   },
-  "coop_no_interaction_pred_distribution": {
+  "coop_no_direction_pred_distribution": {
     "0": 33,
     "1": 67
   },
-  "coop_no_interaction_val_accuracy": 0.86,
-  "coop_pred_distribution": {
-    "0": 32,
-    "1": 68
+  "coop_no_direction_val_accuracy": 0.86,
+  "coop_no_interaction_confusion": {
+    "0->0": 34,
+    "0->1": 11,
+    "1->0": 1,
+    "1->1": 54
   },
-  "coop_val_accuracy": 0.85,
+  "coop_no_interaction_pred_distribution": {
+    "0": 35,
+    "1": 65
+  },
+  "coop_no_interaction_val_accuracy": 0.88,
+  "coop_pred_distribution": {
+    "0": 35,
+    "1": 65
+  },
+  "coop_temporal_confusion": {
+    "0->0": 33,
+    "0->1": 12,
+    "1->0": 2,
+    "1->1": 53
+  },
+  "coop_temporal_pred_distribution": {
+    "0": 35,
+    "1": 65
+  },
+  "coop_temporal_val_accuracy": 0.86,
+  "coop_val_accuracy": 0.86,
   "eval_story": {
-    "cooperative_gain_over_local": 0.0,
+    "cooperative_gain_over_local": 0.01,
     "directional_gain_within_coop": 0.0,
-    "interaction_gain_within_coop": -0.01,
+    "interaction_gain_within_coop": -0.02,
     "label_balance_gap_train_val": 0.6,
-    "sample_per_timestep": 5.0
+    "sample_per_timestep": 5.0,
+    "temporal_coop_gain_over_coop": 0.0,
+    "temporal_coop_gain_over_local": 0.01
   },
   "label_distribution": {
     "0": 255,
@@ -62,8 +75,8 @@
   },
   "local_val_accuracy": 0.85,
   "pred_distribution": {
-    "0": 32,
-    "1": 68
+    "0": 35,
+    "1": 65
   },
   "rows": 500,
   "samples": 500,
@@ -77,7 +90,7 @@
   },
   "uses_adjacency": true,
   "val": 100,
-  "val_accuracy": 0.85,
+  "val_accuracy": 0.86,
   "val_distribution": {
     "0": 45,
     "1": 55

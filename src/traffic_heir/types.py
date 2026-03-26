@@ -12,6 +12,10 @@ class TrafficSample(TypedDict, total=False):
     neighbor_directional: List[float]
     interaction: List[float]
     temporal: List[float]
+    # History-aware cooperative features (v2)
+    neighbor_delta: List[float]       # change in neighbor mean vs last timestep
+    neighbor_rolling: List[float]     # rolling mean of neighbor states (window=3)
+    cross_temporal: List[float]       # local_delta dot neighbor_delta trend signal
     phase: float
     elapsed: float
     source: str

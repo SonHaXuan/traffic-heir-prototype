@@ -8,7 +8,10 @@ from .fusion import (
     cooperative_no_direction_features,
     cooperative_no_interaction_features,
     cooperative_no_neighbor_features,
+    cooperative_temporal_features,
+    graph_lite_features,
     local_features,
+    simple_fusion_features,
 )
 from .labels import decision_label, local_heuristic_label
 from .types import TrafficSample
@@ -29,12 +32,18 @@ def build_xy(samples: Sequence[TrafficSample], mode: str) -> Tuple[List[List[flo
     for sample in samples:
         if mode == "local":
             xs.append(local_features(sample))
+        elif mode == "simple_fusion":
+            xs.append(simple_fusion_features(sample))
+        elif mode == "graph_lite":
+            xs.append(graph_lite_features(sample))
         elif mode == "coop_no_interaction":
             xs.append(cooperative_no_interaction_features(sample))
         elif mode == "coop_no_neighbor":
             xs.append(cooperative_no_neighbor_features(sample))
         elif mode == "coop_no_direction":
             xs.append(cooperative_no_direction_features(sample))
+        elif mode == "coop_temporal":
+            xs.append(cooperative_temporal_features(sample))
         else:
             xs.append(cooperative_features(sample))
         ys.append(decision_label(sample))

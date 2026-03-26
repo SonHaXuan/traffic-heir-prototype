@@ -59,6 +59,7 @@ def run_sumo_binary_experiment(
     modes = {
         "local": (cfg.local_hidden_dim, False),
         "coop": (cfg.coop_hidden_dim, True),
+        "coop_temporal": (cfg.coop_hidden_dim, True),
         "coop_no_direction": (cfg.coop_hidden_dim, True),
         "coop_no_interaction": (cfg.coop_hidden_dim, True),
     }
@@ -101,8 +102,11 @@ def run_sumo_binary_experiment(
     metrics["val_accuracy"] = metrics["coop_val_accuracy"]
     metrics["pred_distribution"] = metrics["coop_pred_distribution"]
     metrics["confusion"] = metrics["coop_confusion"]
+    coop_temporal_acc = float(metrics.get("coop_temporal_val_accuracy", metrics["coop_val_accuracy"]))
     metrics["eval_story"] = {
         "cooperative_gain_over_local": round(float(metrics["coop_val_accuracy"]) - float(metrics["local_val_accuracy"]), 6),
+        "temporal_coop_gain_over_local": round(coop_temporal_acc - float(metrics["local_val_accuracy"]), 6),
+        "temporal_coop_gain_over_coop": round(coop_temporal_acc - float(metrics["coop_val_accuracy"]), 6),
         "directional_gain_within_coop": round(float(metrics["coop_val_accuracy"]) - float(metrics["coop_no_direction_val_accuracy"]), 6),
         "interaction_gain_within_coop": round(float(metrics["coop_val_accuracy"]) - float(metrics["coop_no_interaction_val_accuracy"]), 6),
         "label_balance_gap_train_val": round(abs(len(train_labels) - len(y_val)) / max(1, len(samples)), 6),

@@ -105,6 +105,8 @@ def build_samples_from_grouped(
     samples: List[TrafficSample] = []
     previous_by_id: Dict[str, SumoRow] = {}
     history_by_id: Dict[str, List[List[float]]] = {}
+    # Track neighbor mean history per intersection for history-aware features
+    neighbor_mean_history_by_id: Dict[str, List[List[float]]] = {}
     for timestep in sorted(grouped):
         rows = grouped[timestep]
         row_by_id = {row["intersection_id"]: row for row in rows}
@@ -128,6 +130,18 @@ def build_samples_from_grouped(
             rolling_local = _rolling_mean(neighbor_history + [local]) if neighbor_history else local
             local_vs_roll = [a - b for a, b in zip(local, rolling_local)]
             temporal = local_delta + local_vs_roll
+
+            # ── History-aware cooperative features (v2) ──────────────────────
+            nbr_mean_hist = neighbor_mean_history_by_id.get(row["intersection_id"], [])
+            # neighbor_delta: change in neighbor mean vs previous timestep
+            prev_neighbor_mean = nbr_mean_hist[-1] if nbr_mean_hist else None
+            neighbor_delta = _difference(neighbor_mean, prev_neighbor_mean)
+            # neighbor_rolling: rolling mean of neighbor state (window=3)
+            neighbor_rolling = _rolling_mean(nbr_mean_hist + [neighbor_mean]) if nbr_mean_hist else neighbor_mean
+            # cross_temporal: element-wise product of local_delta and neighbor_delta
+            # captures whether local and neighbor trends are aligned or diverging
+            cross_temporal = [a * b / 20.0 for a, b in zip(local_delta, neighbor_delta)]
+
             samples.append(
                 {
                     "intersection_id": row["intersection_id"],
@@ -137,6 +151,9 @@ def build_samples_from_grouped(
                     "neighbor_directional": neighbor_directional,
                     "interaction": interaction,
                     "temporal": temporal,
+                    "neighbor_delta": neighbor_delta,
+                    "neighbor_rolling": neighbor_rolling,
+                    "cross_temporal": cross_temporal,
                     "phase": row["phase"],
                     "elapsed": row["elapsed"],
                     "source": "sumo",
@@ -145,4 +162,13 @@ def build_samples_from_grouped(
         for row in rows:
             previous_by_id[row["intersection_id"]] = row
             history_by_id.setdefault(row["intersection_id"], []).append(list(row["local"]))
+            # compute neighbor mean for this row for history tracking
+            if adjacency is None:
+                nbrs = [r for r in rows if r["intersection_id"] != row["intersection_id"]]
+            else:
+                nbr_ids = list(adjacency.get(row["intersection_id"], []))
+                nbrs = [row_by_id[nid] for nid in nbr_ids if nid in row_by_id]
+            if nbrs:
+                nm = [sum(v) / len(nbrs) for v in zip(*[n["local"] for n in nbrs])]
+                neighbor_mean_history_by_id.setdefault(row["intersection_id"], []).append(nm)
     return samples

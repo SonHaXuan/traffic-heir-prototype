@@ -7,7 +7,7 @@
 - Across the seed sweep, cooperative HE-friendly performance averaged **0.8861** versus **0.8361** for local modeling, preserving an average gain of **0.0500**.
 - In the 4-action setting, the multiclass model achieved **0.6597** accuracy and **0.5872** macro-F1, while the one-vs-rest variant reached **0.5450** macro-F1.
 - The small SUMO sample (**500** samples, random split) is a pipeline sanity check only.
-- The expanded SUMO experiment (**500** samples, **5** nodes, **100** timesteps) uses a temporal split to avoid leakage. Under this rigorous split, coop and local models both reach **0.8500** / **0.8500** — the cooperative gain is **0 pp**. This is an honest negative result: current cooperative features do not yet generalise to unseen future timesteps in the SUMO setting.
+- The expanded SUMO experiment (**500** samples, **5** nodes, **100** timesteps) uses a temporal split to avoid leakage. Under this rigorous split, coop and local models both reach **0.8600** / **0.8500** — the cooperative gain is **0 pp**. This is an honest negative result: current cooperative features do not yet generalise to unseen future timesteps in the SUMO setting.
 - The exported HEIR stub currently passes both structural and metadata consistency checks (**shape=True**, **consistency=True**), supporting the export pathway without claiming end-to-end encrypted runtime execution.
 
 ## Paper-friendly interpretation

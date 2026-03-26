@@ -45,7 +45,8 @@ def main():
     from traffic_heir.config import PrototypeConfig
     from traffic_heir.sumo_experiment import run_sumo_binary_experiment
 
-    cfg = PrototypeConfig(num_samples=500, epochs=120)
+    # Larger hidden dim + more epochs for meaningful signal at 500-sample scale
+    cfg = PrototypeConfig(num_samples=500, epochs=200, coop_hidden_dim=32)
     result = run_sumo_binary_experiment(
         csv_path=CSV_PATH,
         adjacency_path=ADJ_PATH,

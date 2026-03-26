@@ -17,9 +17,9 @@
 | sumo_binary | timesteps | 100 |
 | sumo_binary | interaction_gain_within_coop | -0.03 |
 | sumo_binary | sample_per_timestep | 5.0 |
-| sumo_large | val_accuracy | 0.85 |
-| sumo_large | coop_val_accuracy | 0.85 |
+| sumo_large | val_accuracy | 0.86 |
+| sumo_large | coop_val_accuracy | 0.86 |
 | sumo_large | local_val_accuracy | 0.85 |
-| sumo_large | cooperative_gain_over_local | 0.0 |
+| sumo_large | cooperative_gain_over_local | 0.01 |
 | sumo_large | samples | 500 |
 | sumo_large | split_mode | temporal |
