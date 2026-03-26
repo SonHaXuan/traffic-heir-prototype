@@ -20,6 +20,7 @@ def main() -> None:
     run_step("prototype_default", ["scripts/run_with_config.py", "configs/experiment/prototype_default.json"])
     run_step("seed_sweep", ["scripts/run_seed_sweep.py"])
     run_step("action4", ["scripts/run_action4_experiment.py"])
+    run_step("heir_report", ["scripts/build_heir_report.py"])
     run_step(
         "sumo_binary",
         [

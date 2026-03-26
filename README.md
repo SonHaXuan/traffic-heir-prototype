@@ -107,6 +107,7 @@ The experiment pipeline also writes reproducible artifacts under `reports/`, inc
 - `seed_sweep_metrics.json`
 - `seed_sweep_table.md`
 - `action4_metrics.json`
+- `heir_export_report.json` (export structure and metadata consistency checks)
 - `sumo_binary_metrics.json` (including sample/timestep/adjacency metadata and ablation deltas)
 - `paper_results_table.md`
 - `summary_report.json`

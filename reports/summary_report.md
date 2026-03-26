@@ -8,6 +8,9 @@
 | seed_sweep | coop_gain_over_local_mean | 0.05 |
 | action4 | val_accuracy | 0.6597 |
 | action4 | macro_f1 | 0.5872 |
+| heir_export | shape_check_passed | True |
+| heir_export | consistency_check_passed | True |
+| heir_export | metadata_val_accuracy | 0.5833 |
 | sumo_binary | val_accuracy | 1.0 |
 | sumo_binary | samples | 6 |
 | sumo_binary | timesteps | 2 |

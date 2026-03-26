@@ -5,6 +5,13 @@
     "ovr_val_accuracy": 0.6806,
     "val_accuracy": 0.6597
   },
+  "heir_export": {
+    "consistency_check_passed": true,
+    "hidden_dim": 10,
+    "input_dim": 50,
+    "metadata_val_accuracy": 0.5833,
+    "shape_check_passed": true
+  },
   "prototype": {
     "coop_he_friendly": 0.8417,
     "coop_minus_local": 0.0333,

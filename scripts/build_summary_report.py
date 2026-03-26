@@ -28,6 +28,7 @@ def main() -> None:
     seed = load_json(reports / "seed_sweep_metrics.json")
     action4 = load_json(reports / "action4_metrics.json")
     sumo = load_json(reports / "sumo_binary_metrics.json")
+    heir = load_json(reports / "heir_export_report.json")
 
     summary = {
         "prototype": {
@@ -55,6 +56,13 @@ def main() -> None:
             "ovr_val_accuracy": safe_round(action4.get("ovr_val_accuracy")),
             "ovr_macro_f1": safe_round(action4.get("ovr_macro_f1")),
         },
+        "heir_export": {
+            "shape_check_passed": bool(heir.get("shape_check_passed", False)),
+            "consistency_check_passed": bool(heir.get("consistency_check_passed", False)),
+            "metadata_val_accuracy": safe_round(heir.get("metadata_val_accuracy")),
+            "hidden_dim": int(heir.get("hidden_dim", 0)) if heir else 0,
+            "input_dim": int(heir.get("input_dim", 0)) if heir else 0,
+        },
         "sumo_binary": {
             "val_accuracy": safe_round(sumo.get("val_accuracy")),
             "cooperative_gain_over_local": safe_round(sumo.get("eval_story", {}).get("cooperative_gain_over_local")),
@@ -78,6 +86,9 @@ def main() -> None:
         {"section": "seed_sweep", "metric": "coop_gain_over_local_mean", "value": summary["seed_sweep"]["coop_gain_over_local_mean"]},
         {"section": "action4", "metric": "val_accuracy", "value": summary["action4"]["val_accuracy"]},
         {"section": "action4", "metric": "macro_f1", "value": summary["action4"]["macro_f1"]},
+        {"section": "heir_export", "metric": "shape_check_passed", "value": summary["heir_export"]["shape_check_passed"]},
+        {"section": "heir_export", "metric": "consistency_check_passed", "value": summary["heir_export"]["consistency_check_passed"]},
+        {"section": "heir_export", "metric": "metadata_val_accuracy", "value": summary["heir_export"]["metadata_val_accuracy"]},
         {"section": "sumo_binary", "metric": "val_accuracy", "value": summary["sumo_binary"]["val_accuracy"]},
         {"section": "sumo_binary", "metric": "samples", "value": summary["sumo_binary"]["samples"]},
         {"section": "sumo_binary", "metric": "timesteps", "value": summary["sumo_binary"]["timesteps"]},
