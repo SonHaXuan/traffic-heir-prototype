@@ -14,8 +14,9 @@ REQUIRED = {
     "heir_export_report.json": ["shape_check_passed", "consistency_check_passed", "export_path"],
     "sumo_binary_metrics.json": ["val_accuracy", "samples", "timesteps", "eval_story"],
     "summary_report.json": ["prototype", "seed_sweep", "action4", "heir_export", "sumo_binary"],
-    "paper_results_table.md": None,
-    "summary_report.md": None,
+    "paper_results_table.md": "table",
+    "summary_report.md": "table",
+    "results_narrative.md": "narrative",
 }
 
 
@@ -30,19 +31,23 @@ def require(condition: bool, message: str) -> None:
 
 def main() -> None:
     checked: list[str] = []
-    for name, keys in REQUIRED.items():
+    for name, spec in REQUIRED.items():
         path = REPORTS / name
         require(path.exists(), f"Missing report artifact: {name}")
         require(path.stat().st_size > 0, f"Empty report artifact: {name}")
         if path.suffix == ".json":
             payload = load_json(path)
             require(isinstance(payload, dict), f"JSON artifact must be an object: {name}")
-            for key in keys or []:
+            for key in spec or []:
                 require(key in payload, f"Missing key '{key}' in {name}")
         else:
             text = path.read_text(encoding="utf-8")
             require(len(text.strip()) > 0, f"Markdown artifact is blank: {name}")
-            require("|" in text, f"Markdown artifact does not look tabular: {name}")
+            if spec == "table":
+                require("|" in text, f"Markdown artifact does not look tabular: {name}")
+            elif spec == "narrative":
+                require(text.lstrip().startswith("#"), f"Narrative markdown should start with a heading: {name}")
+                require("Key findings" in text, f"Narrative markdown missing key findings section: {name}")
         checked.append(name)
 
     summary = load_json(REPORTS / "summary_report.json")

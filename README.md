@@ -112,6 +112,7 @@ The experiment pipeline also writes reproducible artifacts under `reports/`, inc
 - `paper_results_table.md`
 - `summary_report.json`
 - `summary_report.md`
+- `results_narrative.md`
 
 To regenerate and validate the paper-facing artifacts in one shot, run:
 
