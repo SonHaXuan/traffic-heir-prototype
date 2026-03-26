@@ -113,11 +113,13 @@ The experiment pipeline also writes reproducible artifacts under `reports/`, inc
 - `summary_report.json`
 - `summary_report.md`
 
-To regenerate the paper-facing artifacts in one shot, run:
+To regenerate and validate the paper-facing artifacts in one shot, run:
 
 ```bash
 python3 scripts/run_paper_artifacts.py
 ```
+
+This now finishes by checking that the expected JSON/Markdown reports exist and contain the required fields.
 
 ## Current baseline coverage
 

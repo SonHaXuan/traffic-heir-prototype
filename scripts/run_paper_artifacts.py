@@ -31,7 +31,8 @@ def main() -> None:
     )
     run_step("paper_tables", ["scripts/build_paper_tables.py"])
     run_step("summary_report", ["scripts/build_summary_report.py"])
-    print("\nAll paper artifacts generated under reports/.")
+    run_step("validate_reports", ["scripts/validate_reports.py"])
+    print("\nAll paper artifacts generated under reports/ and validated.")
 
 
 if __name__ == "__main__":
