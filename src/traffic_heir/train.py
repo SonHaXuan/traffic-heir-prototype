@@ -58,6 +58,8 @@ def run_experiment(config: PrototypeConfig, report_path: str | None = None) -> D
     max_pressure_acc = accuracy(y_val, max_pressure_predict(val_samples))
 
     local_result = _train_mode(train_samples, val_samples, y_train, y_val, mode="local", hidden_dim=config.local_hidden_dim, epochs=config.epochs, lr=config.learning_rate, seed=config.seed, he_friendly=False)
+    simple_fusion_result = _train_mode(train_samples, val_samples, y_train, y_val, mode="simple_fusion", hidden_dim=config.local_hidden_dim, epochs=config.epochs, lr=config.learning_rate, seed=config.seed + 7, he_friendly=False)
+    graph_lite_result = _train_mode(train_samples, val_samples, y_train, y_val, mode="graph_lite", hidden_dim=config.coop_hidden_dim, epochs=config.epochs, lr=config.learning_rate, seed=config.seed + 9, he_friendly=False)
     coop_plaintext_result = _train_mode(train_samples, val_samples, y_train, y_val, mode="coop", hidden_dim=config.coop_hidden_dim, epochs=config.epochs, lr=config.learning_rate, seed=config.seed + 11, he_friendly=False)
     coop_result = _train_mode(train_samples, val_samples, y_train, y_val, mode="coop", hidden_dim=config.coop_hidden_dim, epochs=config.epochs, lr=config.learning_rate, seed=config.seed + 1, he_friendly=True)
     ablation_no_interaction = _train_mode(train_samples, val_samples, y_train, y_val, mode="coop_no_interaction", hidden_dim=config.coop_hidden_dim, epochs=config.epochs, lr=config.learning_rate, seed=config.seed + 21, he_friendly=True)
@@ -70,6 +72,8 @@ def run_experiment(config: PrototypeConfig, report_path: str | None = None) -> D
     heuristic_robust = accuracy(robust_labels, local_heuristic_predict(robust_val_samples))
     max_pressure_robust = accuracy(robust_labels, max_pressure_predict(robust_val_samples))
     local_robust = _evaluate_result(local_result, robust_val_samples, mode="local", he_friendly=False)
+    simple_fusion_robust = _evaluate_result(simple_fusion_result, robust_val_samples, mode="simple_fusion", he_friendly=False)
+    graph_lite_robust = _evaluate_result(graph_lite_result, robust_val_samples, mode="graph_lite", he_friendly=False)
     coop_plain_robust = _evaluate_result(coop_plaintext_result, robust_val_samples, mode="coop", he_friendly=False)
     coop_he_robust = _evaluate_result(coop_result, robust_val_samples, mode="coop", he_friendly=True)
 
@@ -81,6 +85,8 @@ def run_experiment(config: PrototypeConfig, report_path: str | None = None) -> D
         "heuristic_val_accuracy": heuristic_acc,
         "max_pressure_val_accuracy": max_pressure_acc,
         "local_result": local_result,
+        "simple_fusion_result": simple_fusion_result,
+        "graph_lite_result": graph_lite_result,
         "coop_plaintext_result": coop_plaintext_result,
         "coop_result": coop_result,
         "ablation_no_interaction": ablation_no_interaction,
@@ -91,6 +97,8 @@ def run_experiment(config: PrototypeConfig, report_path: str | None = None) -> D
             "local_heuristic": heuristic_robust,
             "max_pressure": max_pressure_robust,
             "local_model": local_robust,
+            "simple_fusion": simple_fusion_robust,
+            "graph_lite": graph_lite_robust,
             "coop_plaintext": coop_plain_robust,
             "coop_he_friendly": coop_he_robust,
         },
@@ -103,6 +111,8 @@ def run_experiment(config: PrototypeConfig, report_path: str | None = None) -> D
                 "local_heuristic": heuristic_acc,
                 "max_pressure": max_pressure_acc,
                 "local_model": local_result.val_accuracy,
+                "simple_fusion": simple_fusion_result.val_accuracy,
+                "graph_lite": graph_lite_result.val_accuracy,
                 "coop_plaintext": coop_plaintext_result.val_accuracy,
                 "coop_he_friendly": coop_result.val_accuracy,
                 "ablation_no_interaction": ablation_no_interaction.val_accuracy,

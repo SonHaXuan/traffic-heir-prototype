@@ -5,6 +5,7 @@
   "coop_he_friendly": 0.8416666666666667,
   "coop_plaintext": 0.85,
   "fixed_time": 0.5916666666666667,
+  "graph_lite": 0.8666666666666667,
   "local_heuristic": 0.8083333333333333,
   "local_model": 0.8083333333333333,
   "max_pressure": 0.775,
@@ -12,8 +13,11 @@
     "coop_he_friendly": 0.8333333333333334,
     "coop_plaintext": 0.85,
     "fixed_time": 0.5083333333333333,
+    "graph_lite": 0.8083333333333333,
     "local_heuristic": 0.7916666666666666,
     "local_model": 0.8083333333333333,
-    "max_pressure": 0.8166666666666667
-  }
+    "max_pressure": 0.8166666666666667,
+    "simple_fusion": 0.875
+  },
+  "simple_fusion": 0.85
 }
