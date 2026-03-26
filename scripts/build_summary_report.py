@@ -60,8 +60,12 @@ def main() -> None:
             "cooperative_gain_over_local": safe_round(sumo.get("eval_story", {}).get("cooperative_gain_over_local")),
             "directional_gain_within_coop": safe_round(sumo.get("eval_story", {}).get("directional_gain_within_coop")),
             "interaction_gain_within_coop": safe_round(sumo.get("eval_story", {}).get("interaction_gain_within_coop")),
+            "sample_per_timestep": safe_round(sumo.get("eval_story", {}).get("sample_per_timestep")),
+            "label_balance_gap_train_val": safe_round(sumo.get("eval_story", {}).get("label_balance_gap_train_val")),
             "uses_adjacency": bool(sumo.get("uses_adjacency", False)),
             "samples": int(sumo.get("samples", 0)) if sumo else 0,
+            "timesteps": int(sumo.get("timesteps", 0)) if sumo else 0,
+            "adjacency_nodes": int(sumo.get("adjacency_nodes", 0)) if sumo else 0,
         },
     }
 
@@ -75,7 +79,10 @@ def main() -> None:
         {"section": "action4", "metric": "val_accuracy", "value": summary["action4"]["val_accuracy"]},
         {"section": "action4", "metric": "macro_f1", "value": summary["action4"]["macro_f1"]},
         {"section": "sumo_binary", "metric": "val_accuracy", "value": summary["sumo_binary"]["val_accuracy"]},
+        {"section": "sumo_binary", "metric": "samples", "value": summary["sumo_binary"]["samples"]},
+        {"section": "sumo_binary", "metric": "timesteps", "value": summary["sumo_binary"]["timesteps"]},
         {"section": "sumo_binary", "metric": "interaction_gain_within_coop", "value": summary["sumo_binary"]["interaction_gain_within_coop"]},
+        {"section": "sumo_binary", "metric": "sample_per_timestep", "value": summary["sumo_binary"]["sample_per_timestep"]},
     ]
 
     summary_json = reports / "summary_report.json"

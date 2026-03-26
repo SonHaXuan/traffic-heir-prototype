@@ -4,9 +4,13 @@
 | prototype_binary | no_direction | 0.8083 |
 | prototype_binary | no_neighbor | 0.8083 |
 | sumo_binary | val_accuracy | 1.0 |
+| sumo_binary | samples | 6 |
+| sumo_binary | timesteps | 2 |
+| sumo_binary | uses_adjacency | True |
 | sumo_binary | coop_minus_local | 0.0 |
 | sumo_binary | coop_minus_no_direction | 0.0 |
 | sumo_binary | coop_minus_no_interaction | 1.0 |
+| sumo_binary | sample_per_timestep | 3.0 |
 | action4 | val_accuracy | 0.6597 |
 | action4 | macro_f1 | 0.5872 |
 | action4 | ovr_macro_f1 | 0.545 |

@@ -1,4 +1,5 @@
 {
+  "adjacency_nodes": 3,
   "confusion": {
     "1->1": 2
   },
@@ -26,7 +27,9 @@
   "eval_story": {
     "cooperative_gain_over_local": 0.0,
     "directional_gain_within_coop": 0.0,
-    "interaction_gain_within_coop": 1.0
+    "interaction_gain_within_coop": 1.0,
+    "label_balance_gap_train_val": 0.333333,
+    "sample_per_timestep": 3.0
   },
   "label_distribution": {
     "0": 2,
@@ -45,7 +48,12 @@
   "rows": 6,
   "samples": 6,
   "source_csv": "data/sumo/raw/sample_states.csv",
+  "timesteps": 2,
   "train": 4,
+  "train_distribution": {
+    "0": 2,
+    "1": 2
+  },
   "uses_adjacency": true,
   "val": 2,
   "val_accuracy": 1.0,

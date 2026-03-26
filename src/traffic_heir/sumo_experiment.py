@@ -36,15 +36,20 @@ def run_sumo_binary_experiment(
         "coop_no_direction": (cfg.coop_hidden_dim, True),
         "coop_no_interaction": (cfg.coop_hidden_dim, True),
     }
+    all_labels = [decision_label(s, cfg) for s in samples]
+    train_labels = [decision_label(s, cfg) for s in train_samples]
     metrics: Dict[str, object] = {
         "rows": len(rows),
+        "timesteps": len(grouped),
         "samples": len(samples),
         "train": len(train_samples),
         "val": len(val_samples),
-        "label_distribution": distribution([decision_label(s, cfg) for s in samples]),
+        "label_distribution": distribution(all_labels),
+        "train_distribution": distribution(train_labels),
         "val_distribution": distribution(y_val),
         "source_csv": str(csv_path),
         "uses_adjacency": adjacency_path is not None,
+        "adjacency_nodes": len(adjacency) if adjacency is not None else 0,
     }
 
     for mode, (hidden_dim, he_friendly) in modes.items():
@@ -73,6 +78,8 @@ def run_sumo_binary_experiment(
         "cooperative_gain_over_local": round(float(metrics["coop_val_accuracy"]) - float(metrics["local_val_accuracy"]), 6),
         "directional_gain_within_coop": round(float(metrics["coop_val_accuracy"]) - float(metrics["coop_no_direction_val_accuracy"]), 6),
         "interaction_gain_within_coop": round(float(metrics["coop_val_accuracy"]) - float(metrics["coop_no_interaction_val_accuracy"]), 6),
+        "label_balance_gap_train_val": round(abs(len(train_labels) - len(y_val)) / max(1, len(samples)), 6),
+        "sample_per_timestep": round(len(samples) / max(1, len(grouped)), 6),
     }
     if report_path:
         write_metrics_report(metrics, report_path)

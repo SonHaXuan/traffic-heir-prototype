@@ -22,10 +22,14 @@
     "local_stdev": 0.0239
   },
   "sumo_binary": {
+    "adjacency_nodes": 3,
     "cooperative_gain_over_local": 0.0,
     "directional_gain_within_coop": 0.0,
     "interaction_gain_within_coop": 1.0,
+    "label_balance_gap_train_val": 0.3333,
+    "sample_per_timestep": 3.0,
     "samples": 6,
+    "timesteps": 2,
     "uses_adjacency": true,
     "val_accuracy": 1.0
   }

@@ -9,4 +9,7 @@
 | action4 | val_accuracy | 0.6597 |
 | action4 | macro_f1 | 0.5872 |
 | sumo_binary | val_accuracy | 1.0 |
+| sumo_binary | samples | 6 |
+| sumo_binary | timesteps | 2 |
 | sumo_binary | interaction_gain_within_coop | 1.0 |
+| sumo_binary | sample_per_timestep | 3.0 |
