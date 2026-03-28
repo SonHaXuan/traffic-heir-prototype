@@ -1,0 +1,15 @@
+{
+  "consistency_check_passed": true,
+  "export_kind": "heir_stub_ckks_compile_decorated",
+  "export_path": "/Users/v120674/Documents/RMIt/SonHa/traffic-heir-prototype/generated/heir_report_stub.py",
+  "hidden_dim": 10,
+  "input_dim": 50,
+  "manual_sample_score": 0.488204,
+  "metadata_train_accuracy": 0.864583,
+  "metadata_val_accuracy": 0.583333,
+  "notes": [
+    "This report verifies export structure and metadata consistency.",
+    "It does not claim end-to-end encrypted execution through the HEIR runtime."
+  ],
+  "shape_check_passed": true
+}

@@ -1,0 +1,95 @@
+{
+  "rows": [
+    {
+      "coop_he": 0.8417,
+      "local": 0.8083,
+      "no_direction": 0.8083,
+      "no_neighbor": 0.8083,
+      "seed": 7
+    },
+    {
+      "coop_he": 0.925,
+      "local": 0.8667,
+      "no_direction": 0.8583,
+      "no_neighbor": 0.9,
+      "seed": 13
+    },
+    {
+      "coop_he": 0.8917,
+      "local": 0.8333,
+      "no_direction": 0.8583,
+      "no_neighbor": 0.8583,
+      "seed": 23
+    },
+    {
+      "coop_he": 0.85,
+      "local": 0.85,
+      "no_direction": 0.85,
+      "no_neighbor": 0.8667,
+      "seed": 31
+    },
+    {
+      "coop_he": 0.8917,
+      "local": 0.8083,
+      "no_direction": 0.8083,
+      "no_neighbor": 0.8167,
+      "seed": 41
+    },
+    {
+      "coop_he": 0.9167,
+      "local": 0.8667,
+      "no_direction": 0.8667,
+      "no_neighbor": 0.875,
+      "seed": 53
+    },
+    {
+      "coop_he": 0.9167,
+      "local": 0.875,
+      "no_direction": 0.825,
+      "no_neighbor": 0.875,
+      "seed": 67
+    }
+  ],
+  "significance": {
+    "coop_vs_local_cohens_d": 1.515,
+    "coop_vs_local_p_value": 0.0031,
+    "coop_vs_local_t_stat": 4.7528,
+    "n_seeds": 7,
+    "significant_at_0_05": true,
+    "significant_at_0_10": true
+  },
+  "summary": {
+    "coop_he": {
+      "ci_lower_95": 0.8678571428571428,
+      "ci_upper_95": 0.911904761904762,
+      "max": 0.925,
+      "mean": 0.8904761904761905,
+      "min": 0.8416666666666667,
+      "stdev": 0.03067642553982173
+    },
+    "local": {
+      "ci_lower_95": 0.8261904761904761,
+      "ci_upper_95": 0.8619047619047622,
+      "max": 0.875,
+      "mean": 0.844047619047619,
+      "min": 0.8083333333333333,
+      "stdev": 0.025863763074286228
+    },
+    "no_direction": {
+      "ci_lower_95": 0.8226190476190477,
+      "ci_upper_95": 0.8559523809523809,
+      "max": 0.8666666666666667,
+      "mean": 0.8392857142857143,
+      "min": 0.8083333333333333,
+      "stdev": 0.023022713816444888
+    },
+    "no_neighbor": {
+      "ci_lower_95": 0.8357142857142857,
+      "ci_upper_95": 0.8785714285714287,
+      "max": 0.9,
+      "mean": 0.8571428571428571,
+      "min": 0.8083333333333333,
+      "stdev": 0.030676425539821733
+    }
+  }
+}

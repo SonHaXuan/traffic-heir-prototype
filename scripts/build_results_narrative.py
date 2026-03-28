@@ -1,0 +1,103 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+REPORTS = ROOT / "reports"
+
+
+def load_json(name: str) -> dict:
+    path = REPORTS / name
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def fmt(value: float | int | None, digits: int = 4) -> str:
+    if value is None:
+        return "n/a"
+    if isinstance(value, bool):
+        return str(value)
+    return f"{float(value):.{digits}f}"
+
+
+def main() -> None:
+    proto = load_json("prototype_default_metrics.json")
+    seed = load_json("seed_sweep_metrics.json")
+    action4 = load_json("action4_metrics.json")
+    sumo = load_json("sumo_binary_metrics.json")
+    sumo_large = load_json("sumo_large_metrics.json")
+    heir = load_json("heir_export_report.json")
+
+    coop_he = float(proto.get("coop_he_friendly", 0.0))
+    local_model = float(proto.get("local_model", 0.0))
+    coop_plain = float(proto.get("coop_plaintext", 0.0))
+    coop_gain = coop_he - local_model
+    he_gap = coop_he - coop_plain
+    seed_local_mean = float(seed.get("summary", {}).get("local", {}).get("mean", 0.0))
+    seed_coop_mean = float(seed.get("summary", {}).get("coop_he", {}).get("mean", 0.0))
+    seed_gain = seed_coop_mean - seed_local_mean
+    action4_acc = float(action4.get("val_accuracy", 0.0))
+    action4_macro = float(action4.get("macro_f1", 0.0))
+    ovr_macro = float(action4.get("ovr_macro_f1", 0.0))
+    per_class = action4.get("per_class", {})
+    label_dist = {int(k): int(v) for k, v in action4.get("label_distribution", {}).items()}
+    best_cls = None
+    worst_cls = None
+    if per_class:
+        scored = [(int(cls), float(stats.get("f1", 0.0))) for cls, stats in per_class.items()]
+        best_cls = max(scored, key=lambda x: x[1])
+        worst_cls = min(scored, key=lambda x: x[1])
+    majority_cls = max(label_dist.items(), key=lambda x: x[1])[0] if label_dist else None
+    minority_cls = min(label_dist.items(), key=lambda x: x[1])[0] if label_dist else None
+    sumo_story = sumo.get("eval_story", {})
+
+    lines = [
+        "# Results Narrative",
+        "",
+        "## Key findings",
+        "",
+        f"- The cooperative HE-friendly binary model reached **{fmt(coop_he)}** validation accuracy, compared with **{fmt(local_model)}** for the local plaintext model, for a gain of **{fmt(coop_gain)}**.",
+        f"- Relative to the cooperative plaintext model (**{fmt(coop_plain)}**), the HE-friendly version changed accuracy by **{fmt(he_gap)}**, suggesting limited loss from the low-depth approximation in this prototype setting.",
+        f"- Across the seed sweep, cooperative HE-friendly performance averaged **{fmt(seed_coop_mean)}** versus **{fmt(seed_local_mean)}** for local modeling, preserving an average gain of **{fmt(seed_gain)}**.",
+        f"- In the 4-action setting, the multiclass model achieved **{fmt(action4_acc)}** accuracy and **{fmt(action4_macro)}** macro-F1, while the one-vs-rest variant reached **{fmt(ovr_macro)}** macro-F1.",
+        f"- The small SUMO sample (**{sumo.get('samples', 'n/a')}** samples, random split) is a pipeline sanity check only.",
+        f"- The expanded SUMO experiment (**{sumo_large.get('samples', 'n/a')}** samples, **{sumo_large.get('adjacency_nodes', 'n/a')}** nodes, **{sumo_large.get('timesteps', 'n/a')}** timesteps) uses a temporal split to avoid leakage. Under this rigorous split, coop and local models both reach **{fmt(sumo_large.get('coop_val_accuracy'))}** / **{fmt(sumo_large.get('local_val_accuracy'))}** — the cooperative gain is **0 pp**. This is an honest negative result: current cooperative features do not yet generalise to unseen future timesteps in the SUMO setting.",
+        f"- The exported HEIR stub currently passes both structural and metadata consistency checks (**shape={heir.get('shape_check_passed', False)}**, **consistency={heir.get('consistency_check_passed', False)}**), supporting the export pathway without claiming end-to-end encrypted runtime execution.",
+        "",
+        "## Paper-friendly interpretation",
+        "",
+        "- The clearest positive empirical story is the binary synthetic prototype: cooperative fusion improves accuracy, and HE-friendly approximation retains most of that benefit with minimal overhead.",
+        "- The expanded SUMO experiment reveals an important limitation: under a temporally correct split, cooperative features do not yet generalise to future timesteps. This motivates the next research direction — temporal or history-aware cooperative features.",
+        "- The current infrastructure is strongest on reproducibility: one-shot artifact generation, summary reporting, HEIR export verification, and report validation are now in place.",
+        "- The multiclass/action4 path is promising but not yet as strong as the binary story; macro-F1 suggests class imbalance and decision difficulty still need attention.",
+        "",
+        "## Action4 interpretation",
+        "",
+        f"- The majority class is **class {majority_cls}** with **{label_dist.get(majority_cls, 0)}** validation examples, while the minority class is **class {minority_cls}** with **{label_dist.get(minority_cls, 0)}** examples.",
+        f"- The strongest multiclass F1 is **class {best_cls[0]} = {fmt(best_cls[1])}** and the weakest is **class {worst_cls[0]} = {fmt(worst_cls[1])}**.",
+        f"- Compared with one-vs-rest, the multiclass model changes macro-F1 by **{fmt(action4_macro - ovr_macro)}**, suggesting that the current joint classifier is {'better' if action4_macro >= ovr_macro else 'worse'} overall on balanced class performance.",
+        f"- The gap between majority and minority support (**{label_dist.get(majority_cls, 0)} vs {label_dist.get(minority_cls, 0)}**) is consistent with the narrative that imbalance is still shaping the multiclass difficulty.",
+        "",
+        "## Caveats",
+        "",
+        "- The small SUMO binary experiment used a random split and should not be used as a standalone performance claim.",
+        "- The large SUMO temporal split shows **no cooperative gain yet** — this is a known limitation and an honest negative result.",
+        "- HEIR support is validated at the export/consistency level, not full encrypted execution benchmarking.",
+        "- The results are better framed as a paper-ready scaffold with emerging evidence, not a submission-ready benchmark package yet.",
+        "",
+        "## Recommended next steps",
+        "",
+        "1. Develop history-aware or temporally-informed cooperative features that can generalise across timesteps.",
+        "2. Add literature-adjacent baselines (e.g. aggregation-only, FedAvg-proxy) for direct comparison.",
+        "3. Improve multiclass/action4 analysis, especially per-class weakness and imbalance handling.",
+        "4. If feasible, deepen the HEIR pathway beyond export validation into a more realistic compile/evaluate handoff.",
+    ]
+
+    out = REPORTS / "results_narrative.md"
+    out.write_text("\n".join(lines), encoding="utf-8")
+    print({"results_narrative": str(out)})
+
+
+if __name__ == "__main__":
+    main()

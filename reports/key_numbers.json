@@ -1,0 +1,111 @@
+{
+  "main_result": {
+    "coop_he_val_acc": 0.8417,
+    "local_model_val_acc": 0.8083,
+    "gain_over_local_pp": 3.33,
+    "coop_plaintext_val_acc": 0.85,
+    "he_overhead_pp": 0.83,
+    "best_traditional_baseline_val_acc": 0.775,
+    "gain_over_best_baseline_pp": 6.67
+  },
+  "robustness": {
+    "robust_coop_he_val_acc": 0.8333,
+    "robust_local_val_acc": 0.8083,
+    "robust_gain_pp": 2.5
+  },
+  "ablation": {
+    "remove_direction_val_acc": 0.8083,
+    "remove_interaction_val_acc": 0.85,
+    "remove_neighbor_val_acc": 0.8083,
+    "direction_contribution_pp": 3.33,
+    "interaction_contribution_pp": -0.83,
+    "neighbor_contribution_pp": 3.33
+  },
+  "seed_sweep": {
+    "n_seeds": 7,
+    "coop_he_mean": 0.8905,
+    "coop_he_std": 0.0307,
+    "coop_he_ci_lower_95": 0.8679,
+    "coop_he_ci_upper_95": 0.9119,
+    "local_mean": 0.844,
+    "local_std": 0.0259,
+    "mean_gain_pp": 4.64,
+    "p_value": 0.0031,
+    "cohens_d": 1.515,
+    "significant_at_0_05": true
+  },
+  "sumo_binary": {
+    "val_accuracy": 1.0,
+    "samples": 6,
+    "timesteps": 2,
+    "uses_adjacency": true,
+    "interaction_gain_within_coop": 1.0,
+    "note": "Small sample (toy SUMO graph); perfect accuracy expected at this scale"
+  },
+  "action4_multiclass": {
+    "val_accuracy": 0.6597,
+    "macro_f1": 0.5872,
+    "ovr_macro_f1": 0.545,
+    "note": "4-class action prediction; binary story is primary claim"
+  },
+  "sumo_correlated": {
+    "coop_val_accuracy": 0.9643,
+    "local_val_accuracy": 0.8952,
+    "cooperative_gain_pp": 6.9,
+    "simple_fusion_gain_pp": 1.67,
+    "graph_lite_gain_pp": 6.43,
+    "ml_vs_rule_gain_pp": 15.95,
+    "samples": 2100,
+    "wilson_ci": {
+      "coop": {
+        "ci_lower_95": 0.9419,
+        "ci_method": "Wilson score interval",
+        "ci_upper_95": 0.9782,
+        "n_val": 420,
+        "val_accuracy": 0.9642857142857143
+      },
+      "coop_temporal": {
+        "ci_lower_95": 0.9304,
+        "ci_method": "Wilson score interval",
+        "ci_upper_95": 0.9709,
+        "n_val": 420,
+        "val_accuracy": 0.9547619047619048
+      },
+      "graph_lite": {
+        "ci_lower_95": 0.9361,
+        "ci_method": "Wilson score interval",
+        "ci_upper_95": 0.9746,
+        "n_val": 420,
+        "val_accuracy": 0.9595238095238096
+      },
+      "local": {
+        "ci_lower_95": 0.8623,
+        "ci_method": "Wilson score interval",
+        "ci_upper_95": 0.921,
+        "n_val": 420,
+        "val_accuracy": 0.8952380952380953
+      },
+      "simple_fusion": {
+        "ci_lower_95": 0.8809,
+        "ci_method": "Wilson score interval",
+        "ci_upper_95": 0.9354,
+        "n_val": 420,
+        "val_accuracy": 0.9119047619047619
+      }
+    },
+    "note": "7-intersection corridor, 300 timesteps, temporal split, upstream spillback"
+  },
+  "heir_overhead": {
+    "accuracy_gap_pp": 0.83,
+    "latency_ms": 3311.9,
+    "ciphertext_comm_kb": 5488.0,
+    "plaintext_comm_kb": 1.34,
+    "ckks_expansion_factor": 4096,
+    "note": "Theoretical estimates, SEAL 4.x benchmarks, 128-bit security"
+  },
+  "heir_export": {
+    "consistency_check_passed": true,
+    "shape_check_passed": true,
+    "metadata_val_accuracy": 0.5833
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "accuracy_gap": {
+    "gap_pp": 0.83,
+    "he_accuracy": 0.8417,
+    "interpretation": "HE-friendly polynomial activation costs 0.8 pp (1.0% relative) vs plaintext ReLU baseline.",
+    "plaintext_accuracy": 0.85,
+    "relative_gap_pct": 0.98
+  },
+  "ckks_expansion_factor": 4096,
+  "communication_cost_5_intersections": {
+    "coop_he_friendly": {
+      "ciphertext_kb": 3920.0,
+      "plaintext_kb": 0.957
+    },
+    "coop_temporal": {
+      "ciphertext_kb": 5840.0,
+      "plaintext_kb": 1.426
+    },
+    "graph_lite": {
+      "ciphertext_kb": 2080.0,
+      "plaintext_kb": 0.508
+    },
+    "local_model": {
+      "ciphertext_kb": 800.0,
+      "plaintext_kb": 0.195
+    },
+    "simple_fusion": {
+      "ciphertext_kb": 1440.0,
+      "plaintext_kb": 0.352
+    }
+  },
+  "communication_cost_7_intersections": {
+    "coop_he_friendly": {
+      "ciphertext_kb": 5488.0,
+      "plaintext_kb": 1.34
+    },
+    "coop_temporal": {
+      "ciphertext_kb": 8176.0,
+      "plaintext_kb": 1.996
+    },
+    "graph_lite": {
+      "ciphertext_kb": 2912.0,
+      "plaintext_kb": 0.711
+    },
+    "local_model": {
+      "ciphertext_kb": 1120.0,
+      "plaintext_kb": 0.273
+    },
+    "simple_fusion": {
+      "ciphertext_kb": 2016.0,
+      "plaintext_kb": 0.492
+    }
+  },
+  "latency_details": {
+    "coop_he_friendly": {
+      "breakdown_ms": {
+        "additions": 48.9,
+        "ct_ct_multiply": 550.0,
+        "ct_pt_multiply": 1533.0,
+        "rotations": 1180.0
+      },
+      "latency_ms": 3311.9,
+      "mul_depth": 3,
+      "reference": "Conservative estimate based on SEAL 4.x benchmarks (128-bit security, poly_modulus_degree=16384, CKKS scheme). Real hardware latency will vary; use as order-of-magnitude guide."
+    },
+    "coop_temporal": {
+      "breakdown_ms": {
+        "additions": 72.9,
+        "ct_ct_multiply": 550.0,
+        "ct_pt_multiply": 2253.0,
+        "rotations": 1660.0
+      },
+      "latency_ms": 4535.9,
+      "mul_depth": 3,
+      "reference": "Conservative estimate based on SEAL 4.x benchmarks (128-bit security, poly_modulus_degree=16384, CKKS scheme). Real hardware latency will vary; use as order-of-magnitude guide."
+    },
+    "graph_lite": {
+      "breakdown_ms": {
+        "additions": 31.1,
+        "ct_ct_multiply": 650.0,
+        "ct_pt_multiply": 1011.0,
+        "rotations": 760.0
+      },
+      "latency_ms": 2452.1,
+      "mul_depth": 3,
+      "reference": "Conservative estimate based on SEAL 4.x benchmarks (128-bit security, poly_modulus_degree=16384, CKKS scheme). Real hardware latency will vary; use as order-of-magnitude guide."
+    },
+    "local_model": {
+      "breakdown_ms": {
+        "additions": 11.9,
+        "ct_ct_multiply": 650.0,
+        "ct_pt_multiply": 435.0,
+        "rotations": 440.0
+      },
+      "latency_ms": 1536.9,
+      "mul_depth": 3,
+      "reference": "Conservative estimate based on SEAL 4.x benchmarks (128-bit security, poly_modulus_degree=16384, CKKS scheme). Real hardware latency will vary; use as order-of-magnitude guide."
+    },
+    "simple_fusion": {
+      "breakdown_ms": {
+        "additions": 21.5,
+        "ct_ct_multiply": 650.0,
+        "ct_pt_multiply": 723.0,
+        "rotations": 600.0
+      },
+      "latency_ms": 1994.5,
+      "mul_depth": 3,
+      "reference": "Conservative estimate based on SEAL 4.x benchmarks (128-bit security, poly_modulus_degree=16384, CKKS scheme). Real hardware latency will vary; use as order-of-magnitude guide."
+    }
+  },
+  "latency_estimates_ms": {
+    "coop_he_friendly": 3311.9,
+    "coop_temporal": 4535.9,
+    "graph_lite": 2452.1,
+    "local_model": 1536.9,
+    "simple_fusion": 1994.5
+  },
+  "model_configs": {
+    "coop_he_friendly": {
+      "feature_dim": 49,
+      "hidden_dim": 10
+    },
+    "coop_temporal": {
+      "feature_dim": 73,
+      "hidden_dim": 10
+    },
+    "graph_lite": {
+      "feature_dim": 26,
+      "hidden_dim": 12
+    },
+    "local_model": {
+      "feature_dim": 10,
+      "hidden_dim": 12
+    },
+    "simple_fusion": {
+      "feature_dim": 18,
+      "hidden_dim": 12
+    }
+  },
+  "operation_counts": {
+    "coop_he_friendly": {
+      "additions": 489,
+      "ct_ct_muls": 11,
+      "ct_pt_muls": 511,
+      "total_mul_depth": 3
+    },
+    "coop_temporal": {
+      "additions": 729,
+      "ct_ct_muls": 11,
+      "ct_pt_muls": 751,
+      "total_mul_depth": 3
+    },
+    "graph_lite": {
+      "additions": 311,
+      "ct_ct_muls": 13,
+      "ct_pt_muls": 337,
+      "total_mul_depth": 3
+    },
+    "local_model": {
+      "additions": 119,
+      "ct_ct_muls": 13,
+      "ct_pt_muls": 145,
+      "total_mul_depth": 3
+    },
+    "simple_fusion": {
+      "additions": 215,
+      "ct_ct_muls": 13,
+      "ct_pt_muls": 241,
+      "total_mul_depth": 3
+    }
+  },
+  "reference": "SEAL 4.x benchmarks, poly_modulus_degree=16384. Latency figures are theoretical lower bounds.",
+  "security_level_bits": 128
+}

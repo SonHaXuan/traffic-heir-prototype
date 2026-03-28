@@ -1,0 +1,58 @@
+{
+  "action4": {
+    "macro_f1": 0.5872,
+    "macro_f1_minus_ovr": 0.0422,
+    "ovr_macro_f1": 0.545,
+    "ovr_val_accuracy": 0.6806,
+    "val_accuracy": 0.6597
+  },
+  "heir_export": {
+    "consistency_check_passed": true,
+    "hidden_dim": 10,
+    "input_dim": 50,
+    "metadata_val_accuracy": 0.5833,
+    "shape_check_passed": true
+  },
+  "prototype": {
+    "coop_he_friendly": 0.8417,
+    "coop_minus_local": 0.0333,
+    "coop_minus_plaintext": -0.0083,
+    "coop_plaintext": 0.85,
+    "local_model": 0.8083,
+    "robust_coop_he": 0.8333,
+    "robust_local": 0.8083
+  },
+  "seed_sweep": {
+    "coop_gain_over_local_mean": 0.0464,
+    "coop_he_mean": 0.8905,
+    "coop_he_stdev": 0.0307,
+    "local_mean": 0.844,
+    "local_stdev": 0.0259
+  },
+  "sumo_binary": {
+    "adjacency_nodes": 3,
+    "cooperative_gain_over_local": 0.0,
+    "directional_gain_within_coop": 0.0,
+    "interaction_gain_within_coop": 1.0,
+    "label_balance_gap_train_val": 0.3333,
+    "note": "toy sanity-check (random split); superseded by sumo_large",
+    "sample_per_timestep": 3.0,
+    "samples": 6,
+    "timesteps": 2,
+    "uses_adjacency": true,
+    "val_accuracy": 1.0
+  },
+  "sumo_large": {
+    "adjacency_nodes": 5,
+    "coop_val_accuracy": 0.86,
+    "cooperative_gain_over_local": 0.01,
+    "directional_gain_within_coop": 0.0,
+    "local_val_accuracy": 0.85,
+    "note": "500 samples, 5 nodes, temporal split; no cooperative gain yet \u2014 limitation noted",
+    "samples": 500,
+    "split_mode": "temporal",
+    "timesteps": 100,
+    "uses_adjacency": true,
+    "val_accuracy": 0.86
+  }
+}

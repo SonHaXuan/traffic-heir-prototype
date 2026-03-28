@@ -1,0 +1,5 @@
+topology: grid_3x3
+intersections: 9
+lanes_per_direction: 1
+signal_phases: [NS, EW]
+notes: 3x3 grid scaffold for scale-up experiments.

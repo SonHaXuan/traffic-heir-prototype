@@ -1,0 +1,105 @@
+{
+  "adjacency_nodes": 3,
+  "confusion": {
+    "1->1": 2
+  },
+  "coop_confusion": {
+    "1->1": 2
+  },
+  "coop_heuristic_confusion": {
+    "1->1": 2
+  },
+  "coop_heuristic_val_accuracy": 1.0,
+  "coop_no_direction_confusion": {
+    "1->1": 2
+  },
+  "coop_no_direction_pred_distribution": {
+    "1": 2
+  },
+  "coop_no_direction_val_accuracy": 1.0,
+  "coop_no_interaction_confusion": {
+    "1->0": 2
+  },
+  "coop_no_interaction_pred_distribution": {
+    "0": 2
+  },
+  "coop_no_interaction_val_accuracy": 0.0,
+  "coop_no_neighbor_confusion": {
+    "1->1": 2
+  },
+  "coop_no_neighbor_pred_distribution": {
+    "1": 2
+  },
+  "coop_no_neighbor_val_accuracy": 1.0,
+  "coop_pred_distribution": {
+    "1": 2
+  },
+  "coop_temporal_confusion": {
+    "1->0": 2
+  },
+  "coop_temporal_pred_distribution": {
+    "0": 2
+  },
+  "coop_temporal_val_accuracy": 0.0,
+  "coop_val_accuracy": 1.0,
+  "eval_story": {
+    "cooperative_gain_over_local": 0.0,
+    "directional_gain_within_coop": 0.0,
+    "full_coop_gain_over_graph_lite": 0.5,
+    "graph_lite_gain_over_local": -0.5,
+    "graph_lite_gain_over_simple_fusion": -0.5,
+    "interaction_gain_within_coop": 1.0,
+    "label_balance_gap_train_val": 0.333333,
+    "ml_coop_gain_over_heuristic_coop": 0.0,
+    "sample_per_timestep": 3.0,
+    "simple_fusion_gain_over_local": 0.0,
+    "temporal_coop_gain_over_coop": -1.0,
+    "temporal_coop_gain_over_local": -1.0
+  },
+  "graph_lite_confusion": {
+    "1->0": 1,
+    "1->1": 1
+  },
+  "graph_lite_pred_distribution": {
+    "0": 1,
+    "1": 1
+  },
+  "graph_lite_val_accuracy": 0.5,
+  "label_distribution": {
+    "0": 2,
+    "1": 4
+  },
+  "local_confusion": {
+    "1->1": 2
+  },
+  "local_pred_distribution": {
+    "1": 2
+  },
+  "local_val_accuracy": 1.0,
+  "pred_distribution": {
+    "1": 2
+  },
+  "rows": 6,
+  "samples": 6,
+  "simple_fusion_confusion": {
+    "1->1": 2
+  },
+  "simple_fusion_pred_distribution": {
+    "1": 2
+  },
+  "simple_fusion_val_accuracy": 1.0,
+  "source_csv": "data/sumo/raw/sample_states.csv",
+  "split_mode": "random",
+  "timesteps": 2,
+  "train": 4,
+  "train_distribution": {
+    "0": 2,
+    "1": 2
+  },
+  "uses_adjacency": true,
+  "val": 2,
+  "val_accuracy": 1.0,
+  "val_distribution": {
+    "1": 2
+  }
+}

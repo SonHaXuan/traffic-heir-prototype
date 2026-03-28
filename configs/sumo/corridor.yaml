@@ -1,0 +1,5 @@
+topology: corridor
+intersections: 4
+lanes_per_direction: 1
+signal_phases: [NS, EW]
+notes: Corridor-style scaffold for cooperative decision support experiments.

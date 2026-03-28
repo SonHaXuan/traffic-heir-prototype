@@ -1,0 +1,143 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Dict
+
+from .baselines import cooperative_max_pressure_predict
+from .config import PrototypeConfig
+from .evaluate import build_splits, build_xy
+from .labels import decision_label
+from .metrics import confusion_counts, distribution
+from .models import TrainResult, predict_batch, train_two_layer_network
+from .reporting import write_metrics_report
+from .sumo_data import build_samples_from_grouped, group_by_timestep, load_sumo_csv
+
+
+def _temporal_split(
+    samples: list, train_ratio: float
+) -> tuple:
+    """Split by timestep: first train_ratio% of timesteps → train, rest → val.
+    Avoids temporal leakage where adjacent timestep features are near-identical.
+    """
+    if not samples:
+        return [], []
+    max_ts = max(s["timestep"] for s in samples)
+    split_ts = int(max_ts * train_ratio)
+    train = [s for s in samples if s["timestep"] <= split_ts]
+    val = [s for s in samples if s["timestep"] > split_ts]
+    return train, val
+
+
+def run_sumo_binary_experiment(
+    csv_path: str | Path,
+    adjacency_path: str | Path | None = None,
+    config: PrototypeConfig | None = None,
+    report_path: str | Path | None = None,
+    split_mode: str = "random",
+) -> Dict[str, object]:
+    """
+    Run the SUMO binary cooperative inference experiment.
+
+    Args:
+        split_mode: "random" (default, original behaviour) or "temporal"
+                    (split by timestep to avoid temporal leakage).
+    """
+    cfg = config or PrototypeConfig(num_samples=6, epochs=80)
+    rows = load_sumo_csv(csv_path)
+    grouped = group_by_timestep(rows)
+    adjacency = None
+    if adjacency_path is not None:
+        adjacency = json.loads(Path(adjacency_path).read_text(encoding="utf-8"))
+    samples = build_samples_from_grouped(grouped, adjacency=adjacency)
+    if split_mode == "temporal":
+        train_samples, val_samples = _temporal_split(samples, cfg.train_ratio)
+    else:
+        train_samples, val_samples = build_splits(samples, cfg.train_ratio, seed=cfg.seed)
+    _, y_train = build_xy(train_samples, mode="local")
+    _, y_val = build_xy(val_samples, mode="local")
+
+    modes = {
+        "local":               (cfg.local_hidden_dim, False),
+        "simple_fusion":       (cfg.local_hidden_dim, False),
+        "graph_lite":          (cfg.local_hidden_dim, False),
+        "coop":                (cfg.coop_hidden_dim, True),
+        "coop_temporal":       (cfg.coop_hidden_dim, True),
+        "coop_no_neighbor":    (cfg.coop_hidden_dim, True),
+        "coop_no_direction":   (cfg.coop_hidden_dim, True),
+        "coop_no_interaction": (cfg.coop_hidden_dim, True),
+    }
+    all_labels = [decision_label(s, cfg) for s in samples]
+    train_labels = [decision_label(s, cfg) for s in train_samples]
+    metrics: Dict[str, object] = {
+        "rows": len(rows),
+        "timesteps": len(grouped),
+        "samples": len(samples),
+        "train": len(train_samples),
+        "val": len(val_samples),
+        "label_distribution": distribution(all_labels),
+        "train_distribution": distribution(train_labels),
+        "val_distribution": distribution(y_val),
+        "source_csv": str(csv_path),
+        "uses_adjacency": adjacency_path is not None,
+        "adjacency_nodes": len(adjacency) if adjacency is not None else 0,
+        "split_mode": split_mode,
+    }
+
+    for mode, (hidden_dim, he_friendly) in modes.items():
+        x_train, _ = build_xy(train_samples, mode=mode)
+        x_val, _ = build_xy(val_samples, mode=mode)
+        result: TrainResult = train_two_layer_network(
+            x_train,
+            y_train,
+            x_val,
+            y_val,
+            hidden_dim=hidden_dim,
+            epochs=cfg.epochs,
+            lr=cfg.learning_rate,
+            seed=cfg.seed + len(mode),
+            he_friendly=he_friendly,
+        )
+        preds = predict_batch(x_val, result.weights1, result.bias1, result.weights2, result.bias2, he_friendly)
+        metrics[f"{mode}_val_accuracy"] = result.val_accuracy
+        metrics[f"{mode}_pred_distribution"] = distribution(preds)
+        metrics[f"{mode}_confusion"] = confusion_counts(y_val, preds)
+
+    # Cooperative rule-based baseline (uses neighbor info without ML)
+    coop_heuristic_preds = cooperative_max_pressure_predict(val_samples)
+    coop_heuristic_acc = sum(
+        int(p == t) for p, t in zip(coop_heuristic_preds, y_val)
+    ) / max(1, len(y_val))
+    metrics["coop_heuristic_val_accuracy"] = round(coop_heuristic_acc, 6)
+    metrics["coop_heuristic_confusion"] = confusion_counts(y_val, coop_heuristic_preds)
+
+    metrics["val_accuracy"] = metrics["coop_val_accuracy"]
+    metrics["pred_distribution"] = metrics["coop_pred_distribution"]
+    metrics["confusion"] = metrics["coop_confusion"]
+
+    local_acc = float(metrics["local_val_accuracy"])
+    coop_acc = float(metrics["coop_val_accuracy"])
+    coop_temporal_acc = float(metrics.get("coop_temporal_val_accuracy", coop_acc))
+    simple_fusion_acc = float(metrics.get("simple_fusion_val_accuracy", local_acc))
+    graph_lite_acc = float(metrics.get("graph_lite_val_accuracy", local_acc))
+
+    metrics["eval_story"] = {
+        # Progressive fusion gains (Case B story)
+        "simple_fusion_gain_over_local": round(simple_fusion_acc - local_acc, 6),
+        "graph_lite_gain_over_local": round(graph_lite_acc - local_acc, 6),
+        "graph_lite_gain_over_simple_fusion": round(graph_lite_acc - simple_fusion_acc, 6),
+        "full_coop_gain_over_graph_lite": round(coop_acc - graph_lite_acc, 6),
+        # ML cooperative vs rule-based cooperative
+        "ml_coop_gain_over_heuristic_coop": round(coop_acc - coop_heuristic_acc, 6),
+        # Original story
+        "cooperative_gain_over_local": round(coop_acc - local_acc, 6),
+        "temporal_coop_gain_over_local": round(coop_temporal_acc - local_acc, 6),
+        "temporal_coop_gain_over_coop": round(coop_temporal_acc - coop_acc, 6),
+        "directional_gain_within_coop": round(coop_acc - float(metrics["coop_no_direction_val_accuracy"]), 6),
+        "interaction_gain_within_coop": round(coop_acc - float(metrics["coop_no_interaction_val_accuracy"]), 6),
+        "label_balance_gap_train_val": round(abs(len(train_labels) - len(y_val)) / max(1, len(samples)), 6),
+        "sample_per_timestep": round(len(samples) / max(1, len(grouped)), 6),
+    }
+    if report_path:
+        write_metrics_report(metrics, report_path)
+    return metrics

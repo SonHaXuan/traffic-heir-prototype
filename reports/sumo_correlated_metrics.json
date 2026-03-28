@@ -1,0 +1,180 @@
+{
+  "adjacency_nodes": 7,
+  "confusion": {
+    "0->0": 243,
+    "0->1": 10,
+    "1->0": 5,
+    "1->1": 162
+  },
+  "coop_confusion": {
+    "0->0": 243,
+    "0->1": 10,
+    "1->0": 5,
+    "1->1": 162
+  },
+  "coop_heuristic_confusion": {
+    "0->0": 188,
+    "0->1": 65,
+    "1->0": 17,
+    "1->1": 150
+  },
+  "coop_heuristic_val_accuracy": 0.804762,
+  "coop_no_direction_confusion": {
+    "0->0": 236,
+    "0->1": 17,
+    "1->0": 28,
+    "1->1": 139
+  },
+  "coop_no_direction_pred_distribution": {
+    "0": 264,
+    "1": 156
+  },
+  "coop_no_direction_val_accuracy": 0.8928571428571429,
+  "coop_no_interaction_confusion": {
+    "0->0": 249,
+    "0->1": 4,
+    "1->0": 9,
+    "1->1": 158
+  },
+  "coop_no_interaction_pred_distribution": {
+    "0": 258,
+    "1": 162
+  },
+  "coop_no_interaction_val_accuracy": 0.969047619047619,
+  "coop_no_neighbor_confusion": {
+    "0->0": 237,
+    "0->1": 16,
+    "1->0": 27,
+    "1->1": 140
+  },
+  "coop_no_neighbor_pred_distribution": {
+    "0": 264,
+    "1": 156
+  },
+  "coop_no_neighbor_val_accuracy": 0.8976190476190476,
+  "coop_pred_distribution": {
+    "0": 248,
+    "1": 172
+  },
+  "coop_temporal_confusion": {
+    "0->0": 239,
+    "0->1": 14,
+    "1->0": 5,
+    "1->1": 162
+  },
+  "coop_temporal_pred_distribution": {
+    "0": 244,
+    "1": 176
+  },
+  "coop_temporal_val_accuracy": 0.9547619047619048,
+  "coop_val_accuracy": 0.9642857142857143,
+  "eval_story": {
+    "cooperative_gain_over_local": 0.069048,
+    "directional_gain_within_coop": 0.071429,
+    "full_coop_gain_over_graph_lite": 0.004762,
+    "graph_lite_gain_over_local": 0.064286,
+    "graph_lite_gain_over_simple_fusion": 0.047619,
+    "interaction_gain_within_coop": -0.004762,
+    "label_balance_gap_train_val": 0.6,
+    "ml_coop_gain_over_heuristic_coop": 0.159524,
+    "sample_per_timestep": 7.0,
+    "simple_fusion_gain_over_local": 0.016667,
+    "temporal_coop_gain_over_coop": -0.009524,
+    "temporal_coop_gain_over_local": 0.059524
+  },
+  "graph_lite_confusion": {
+    "0->0": 247,
+    "0->1": 6,
+    "1->0": 11,
+    "1->1": 156
+  },
+  "graph_lite_pred_distribution": {
+    "0": 258,
+    "1": 162
+  },
+  "graph_lite_val_accuracy": 0.9595238095238096,
+  "label_distribution": {
+    "0": 1308,
+    "1": 792
+  },
+  "local_confusion": {
+    "0->0": 236,
+    "0->1": 17,
+    "1->0": 27,
+    "1->1": 140
+  },
+  "local_pred_distribution": {
+    "0": 263,
+    "1": 157
+  },
+  "local_val_accuracy": 0.8952380952380953,
+  "pred_distribution": {
+    "0": 248,
+    "1": 172
+  },
+  "rows": 2100,
+  "samples": 2100,
+  "simple_fusion_confusion": {
+    "0->0": 243,
+    "0->1": 10,
+    "1->0": 27,
+    "1->1": 140
+  },
+  "simple_fusion_pred_distribution": {
+    "0": 270,
+    "1": 150
+  },
+  "simple_fusion_val_accuracy": 0.9119047619047619,
+  "source_csv": "/Users/v120674/Documents/RMIt/SonHa/traffic-heir-prototype/data/sumo/raw/correlated_states.csv",
+  "split_mode": "temporal",
+  "timesteps": 300,
+  "train": 1680,
+  "train_distribution": {
+    "0": 1055,
+    "1": 625
+  },
+  "uses_adjacency": true,
+  "val": 420,
+  "val_accuracy": 0.9642857142857143,
+  "val_distribution": {
+    "0": 253,
+    "1": 167
+  },
+  "wilson_ci": {
+    "coop": {
+      "ci_lower_95": 0.9419,
+      "ci_method": "Wilson score interval",
+      "ci_upper_95": 0.9782,
+      "n_val": 420,
+      "val_accuracy": 0.9642857142857143
+    },
+    "coop_temporal": {
+      "ci_lower_95": 0.9304,
+      "ci_method": "Wilson score interval",
+      "ci_upper_95": 0.9709,
+      "n_val": 420,
+      "val_accuracy": 0.9547619047619048
+    },
+    "graph_lite": {
+      "ci_lower_95": 0.9361,
+      "ci_method": "Wilson score interval",
+      "ci_upper_95": 0.9746,
+      "n_val": 420,
+      "val_accuracy": 0.9595238095238096
+    },
+    "local": {
+      "ci_lower_95": 0.8623,
+      "ci_method": "Wilson score interval",
+      "ci_upper_95": 0.921,
+      "n_val": 420,
+      "val_accuracy": 0.8952380952380953
+    },
+    "simple_fusion": {
+      "ci_lower_95": 0.8809,
+      "ci_method": "Wilson score interval",
+      "ci_upper_95": 0.9354,
+      "n_val": 420,
+      "val_accuracy": 0.9119047619047619
+    }
+  }
+}
